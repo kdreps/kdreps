@@ -12,6 +12,7 @@ body {
   font-family: Arial, sans-serif;
   background: #0a0a0a;
   color: white;
+  overflow-x: hidden;
 }
 
 /* ===== NAVBAR ===== */
@@ -21,10 +22,12 @@ body {
   width: 100%;
   height: 70px;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 20px;
 
+  box-sizing: border-box;
   padding: 0 30px;
 
   background: rgba(10,10,10,0.95);
@@ -34,32 +37,11 @@ body {
 }
 
 .nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  justify-self: center;
   display: flex;
-  gap: 28px;
+  gap: 24px;
   white-space: nowrap;
-}
-
-.nav-right {
-  display: flex;
-  gap: 12px;
-  flex-shrink: 0; /* 🔥 zapobiega ucinaniu */
-}
-
-
-.icon-btn {
-  border: 1px solid #333;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.icon-btn:hover {
-  border-color: white;
-  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  min-width: 0;
 }
 
 /* LOGO */
@@ -75,7 +57,7 @@ body {
   align-items: center;
   gap: 8px;
 
-  color: #eee; /* 🔥 było szare — teraz premium */
+  color: #eee;
   font-size: 14px;
   font-weight: 600;
 
@@ -83,15 +65,6 @@ body {
   transition: 0.25s;
 }
 
-/* IKONA (jak screen – outline) */
-.icon {
-  width: 16px;
-  height: 16px;
-  border: 1.5px solid white;
-  border-radius: 4px;
-}
-
-/* HOVER */
 .nav-item:hover {
   color: #fff;
   transform: scale(1.08);
@@ -102,7 +75,8 @@ body {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 /* IKONY PRAWE */
@@ -128,53 +102,7 @@ body {
   margin-top: 120px;
   text-align: center;
 }
-
-.hero h1 {
-  font-size: 80px;
-  margin: 0;
-  font-weight: 900;
-  text-shadow: 0 0 20px rgba(255,255,255,0.5);
-}
-
-.hero p {
-  color: #aaa;
-  margin-top: 10px;
-}
-
-/* SEARCH */
-.search {
-  margin-top: 30px;
-}
-
-.search input {
-  width: 420px;
-  max-width: 90%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  background: #111;
-  color: white;
-}
-
-.search input:focus {
-  outline: none;
-  border-color: white;
-  box-shadow: 0 0 15px rgba(255,255,255,0.4);
-}
-
-/* DISCORD */
-.discord {
-  margin-top: 15px;
-}
-
-.discord a {
-  color: #aaa;
-  text-decoration: none;
-}
-
-.discord a:hover {
-  color: white;
-}
+@@ -178,139 +152,138 @@ body {
 
 /* ===== KATALOG (LEWA STRONA) ===== */
 .catalog {
@@ -200,12 +128,26 @@ body {
 }
 
 /* MOBILE */
-@media (max-width: 700px) {
+@media (max-width: 1280px) {
+  .nav-center {
+    justify-self: start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+}
 
-  .nav-left .nav-item {
+@media (max-width: 900px) {
+  .nav-center {
     display: none;
   }
 
+  .hero h1 {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 700px) {
   .catalog {
     display: none;
   }
@@ -214,6 +156,10 @@ body {
     font-size: 40px;
   }
 
+  .navbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
 }
 
 </style>
@@ -231,46 +177,27 @@ body {
   <div class="nav-center">
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="8" cy="8" r="6"></circle>
-        <line x1="13" y1="13" x2="17" y2="17"></line>
-      </svg>
-      WYSZUKIWARKA
+      🔎 WYSZUKIWARKA
     </div>
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="12" height="12"></rect>
-      </svg>
-      ŚLEDZENIE
+      📌 ŚLEDZENIE
     </div>
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 3h12v12H3z"></path>
-      </svg>
-      SPREADSHEET
+      📊 SPREADSHEET
     </div>
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="9" cy="9" r="6"></circle>
-      </svg>
-      KATALOG
+      📁 KATALOG
     </div>
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 4h10v10H4z"></path>
-      </svg>
-      QC
+      ✅ QC
     </div>
 
     <div class="nav-item">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="9" cy="9" r="2"></circle>
-      </svg>
-      NARZĘDZIA
+      🛠 NARZĘDZIA
     </div>
 
   </div>
@@ -304,12 +231,12 @@ body {
 
 <!-- KATALOG -->
 <div class="catalog">
-  <h3>KATALOG</h3>
-  <div>BUTY</div>
-  <div>BLUZY</div>
-  <div>KOSZULKI</div>
-  <div>SPODNIE</div>
-  <div>SPODENKI</div>
+  <h3>📚 KATALOG</h3>
+  <div>👟 BUTY</div>
+  <div>🧥 BLUZY</div>
+  <div>👕 KOSZULKI</div>
+  <div>👖 SPODNIE</div>
+  <div>🩳 SPODENKI</div>
 </div>
 
 </body>
