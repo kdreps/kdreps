@@ -9,8 +9,8 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0a0a0a;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #0b0b0b;
   color: white;
 }
 
@@ -19,58 +19,66 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 15px 20px;
+  padding: 14px 30px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 25px;
-  background: rgba(10,10,10,0.8);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
+  justify-content: space-between;
+  background: #0b0b0b;
+  border-bottom: 1px solid #1a1a1a;
 }
 
 /* LOGO */
 .logo {
-  font-size: 28px;
-  font-weight: 900;
-  text-shadow: 0 0 12px rgba(255,255,255,0.6);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 1px;
 }
 
-/* NAV ITEM */
-.nav-item {
+/* NAV LINKS */
+.nav-links {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
+  gap: 25px;
   font-size: 14px;
-  cursor: pointer;
-  transition: all 0.25s ease;
+  color: #ccc;
 }
 
-/* HOVER */
-.nav-item:hover {
-  transform: scale(1.08);
-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+.nav-links span {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-links span:hover {
+  color: white;
+}
+
+/* RIGHT ICONS */
+.nav-right {
+  display: flex;
+  gap: 15px;
+  color: #aaa;
 }
 
 /* ===== HERO ===== */
 .hero {
-  margin-top: 160px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-/* DUŻY NAPIS */
+/* TITLE */
 .hero h1 {
-  font-size: 70px;
+  font-size: 90px;
+  font-weight: 800;
   margin: 0;
-  font-weight: 900;
-  text-shadow: 0 0 20px rgba(255,255,255,0.4);
 }
 
-/* OPIS */
+/* SUBTEXT */
 .hero p {
-  margin-top: 10px;
   color: #aaa;
+  margin-top: 10px;
 }
 
 /* SEARCH */
@@ -82,46 +90,42 @@ body {
   width: 420px;
   max-width: 90%;
   padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #333;
+  border-radius: 10px;
+  border: 1px solid #1f1f1f;
   background: #111;
   color: white;
-  transition: 0.3s;
 }
 
-/* SEARCH HOVER */
-.search input:focus {
-  outline: none;
-  border-color: white;
-  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+/* BUTTONS */
+.buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
 }
 
-/* DISCORD */
-.discord {
-  margin-top: 15px;
-}
-
-.discord a {
-  color: #aaa;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.discord a:hover {
+.btn {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid #333;
+  background: transparent;
   color: white;
-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  border-color: white;
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {
 
-  .navbar {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
   .hero h1 {
     font-size: 40px;
+  }
+
+  .nav-links {
+    display: none;
   }
 
 }
@@ -134,34 +138,40 @@ body {
 <!-- NAVBAR -->
 <div class="navbar">
 
-  <div class="nav-item">🔍 WYSZUKIWARKA</div>
-  <div class="nav-item">📦 ŚLEDZENIE DOSTAWY</div>
-  
   <div class="logo">KDREPS</div>
-  
-  <div class="nav-item">📊 SPREADSHEET</div>
-  <div class="nav-item">🛍️ CAŁY KATALOG</div>
-  <div class="nav-item">🧪 QUALITY CHECK</div>
-  <div class="nav-item">🛠️ NARZĘDZIA</div>
-  <div class="nav-item">❤️</div>
-  <div class="nav-item">⚙️</div>
+
+  <div class="nav-links">
+    <span>Spreadsheet</span>
+    <span>Browse Finds</span>
+    <span>Quality checks</span>
+    <span>Outfits</span>
+    <span>Sellers</span>
+    <span>Tools</span>
+  </div>
+
+  <div class="nav-right">
+    <span>♡</span>
+    <span>⚙</span>
+  </div>
 
 </div>
 
 <!-- HERO -->
 <div class="hero">
 
-  <h1>KDREPS</h1>
+  <h1>kdreps.pl</h1>
   <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
 
   <div class="search">
-    <input type="text" placeholder="Wyszukiwarka...">
+    <input type="text" placeholder="Search...">
   </div>
 
-  <div class="discord">
+  <div class="buttons">
     <a href="https://discord.gg/vJTNhqHSNh" target="_blank">
-      Dołącz do społeczności
+      <button class="btn">Dołącz do społeczności</button>
     </a>
+
+    <button class="btn">Przeglądaj</button>
   </div>
 
 </div>
