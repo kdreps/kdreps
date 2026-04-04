@@ -12,12 +12,11 @@
   --line: #cfcfcf;
 }
 
-/* RESET */
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: Inter, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
 }
@@ -26,179 +25,131 @@ body {
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
-  height: 72px;
+  width: 100%;
+  height: 70px;
 
-  background: rgba(231, 231, 231, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 30px;
+
+  background: rgba(231,231,231,0.95);
   border-bottom: 1px solid var(--line);
 
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 16px;
-
-  padding: 0 12px;
-  overflow: hidden;
+  z-index: 999;
 }
 
-.brand {
-  font-size: 28px;
+.logo {
+  font-size: 22px;
   font-weight: 900;
 }
 
-/* NAV CENTER */
 .nav-center {
   display: flex;
-  align-items: center;
-  gap: 10px;
-
-  overflow-x: auto;
+  gap: 28px;
   white-space: nowrap;
-  scrollbar-width: none;
-}
-
-.nav-center::-webkit-scrollbar {
-  display: none;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  border: 2px solid transparent;
-  border-radius: 12px;
-  padding: 6px 12px;
-
-  font-size: 15px;
-  font-weight: 700;
-
-  text-decoration: none;
-  color: inherit;
-}
-
-.nav-item.active {
-  border-color: #0a0d13;
-}
-
-/* SVG IKONY */
-.nav-icon {
-  width: 18px !important;
-  height: 18px !important;
-
-  stroke: #0a0d13;
-  stroke-width: 2;
-
-  fill: none !important;
-
-  flex-shrink: 0;
-}
-
-/* FIX NA BUG SVG */
-svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/* RIGHT */
-.nav-icons {
-  display: flex;
   gap: 8px;
-  flex-shrink: 0;
-}
 
-.icon-btn {
-  width: 38px;
-  height: 38px;
+  font-size: 14px;
+  font-weight: 600;
 
-  display: grid;
-  place-items: center;
-
-  border: 1px solid #222;
-  background: #0f131b;
-  color: white;
-
-  border-radius: 6px;
   cursor: pointer;
 }
 
-/* ===== LAYOUT ===== */
-.layout {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px 10px;
+/* IKONY */
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #000;
+  stroke-width: 2;
+  fill: none;
 }
 
-/* KATALOG */
-.catalog h3 {
-  font-size: 28px;
+/* PRAWO */
+.nav-right {
+  display: flex;
+  gap: 12px;
 }
 
-.catalog a {
-  display: block;
-  font-size: 18px;
-  margin: 5px 0;
-  text-decoration: none;
-  color: inherit;
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-/* HERO */
+/* ===== HERO ===== */
 .hero {
+  margin-top: 120px;
   text-align: center;
 }
 
 .hero h1 {
   font-size: 80px;
   margin: 0;
+  font-weight: 900;
 }
 
 .hero p {
-  font-size: 20px;
+  margin-top: 10px;
 }
 
 .hero-search {
-  margin-top: 15px;
-  border: 2px solid black;
+  margin-top: 20px;
   padding: 10px 20px;
+  border: 1px solid black;
   display: inline-block;
 }
 
-/* PRODUKTY */
+/* ===== KATALOG ===== */
+.catalog {
+  position: fixed;
+  left: 20px;
+  top: 100px;
+}
+
+.catalog h3 {
+  margin-bottom: 10px;
+}
+
+.catalog div {
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+/* ===== PRODUKTY ===== */
 .latest {
   margin-top: 40px;
+  padding-left: 200px;
 }
 
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .card {
   background: #0f131b;
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 .card-media {
-  height: 100px;
+  height: 120px;
   background: #222;
   margin-bottom: 10px;
-}
-
-/* MOBILE */
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .catalog {
-    display: none;
-  }
 }
 </style>
 </head>
@@ -206,87 +157,85 @@ svg {
 <body>
 
 <!-- NAVBAR -->
-<header class="navbar">
-  <div class="brand">KDREPS</div>
+<div class="navbar">
 
-  <nav class="nav-center">
+  <div class="logo">KDREPS</div>
 
-    <a class="nav-item active" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="7"></circle>
-        <line x1="16" y1="16" x2="21" y2="21"></line>
+  <div class="nav-center">
+
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <circle cx="8" cy="8" r="6"></circle>
+        <line x1="13" y1="13" x2="17" y2="17"></line>
       </svg>
       WYSZUKIWARKA
-    </a>
+    </div>
 
-    <a class="nav-item" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <rect x="4" y="4" width="16" height="16"></rect>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="12" height="12"></rect>
       </svg>
       ŚLEDZENIE DOSTAWY
-    </a>
+    </div>
 
-    <a class="nav-item" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <rect x="6" y="6" width="12" height="12"></rect>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <path d="M3 3h12v12H3z"></path>
       </svg>
       SPREADSHEET
-    </a>
+    </div>
 
-    <a class="nav-item" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="8"></circle>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <circle cx="9" cy="9" r="6"></circle>
       </svg>
-      CAŁY KATALOG
-    </a>
+      KATALOG
+    </div>
 
-    <a class="nav-item" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <path d="M4 4h16v16H4z"></path>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <path d="M4 4h10v10H4z"></path>
       </svg>
-      QUALITY CHECK
-    </a>
+      QC
+    </div>
 
-    <a class="nav-item" href="#">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="3"></circle>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="2"></circle>
       </svg>
       NARZĘDZIA
-    </a>
+    </div>
 
-  </nav>
-
-  <div class="nav-icons">
-    <button class="icon-btn">♡</button>
-    <button class="icon-btn">⚙</button>
   </div>
-</header>
 
-<!-- CONTENT -->
-<div class="layout">
+  <div class="nav-right">
+    <div class="icon-btn">♡</div>
+    <div class="icon-btn">⚙</div>
+  </div>
 
-  <aside class="catalog">
-    <h3>KATALOG</h3>
-    <a href="#">BUTY</a>
-    <a href="#">BLUZY</a>
-    <a href="#">KOSZULKI</a>
-    <a href="#">SPODNIE</a>
-    <a href="#">SPODENKI</a>
-  </aside>
+</div>
 
-  <main>
-    <section class="hero">
-      <h1>KDREPS</h1>
-      <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
-      <div class="hero-search">WYSZUKIWARKA</div>
-    </section>
+<!-- HERO -->
+<div class="hero">
+  <h1>KDREPS</h1>
+  <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
+  <div class="hero-search">WYSZUKIWARKA</div>
+</div>
 
-    <section class="latest">
-      <h2>OSTATNIO DODANE</h2>
-      <div class="cards" id="product-cards"></div>
-    </section>
-  </main>
+<!-- KATALOG -->
+<div class="catalog">
+  <h3>KATALOG</h3>
+  <div>BUTY</div>
+  <div>BLUZY</div>
+  <div>KOSZULKI</div>
+  <div>SPODNIE</div>
+  <div>SPODENKI</div>
+</div>
 
+<!-- PRODUKTY -->
+<div class="latest">
+  <h2>OSTATNIO DODANE</h2>
+  <div class="cards" id="product-cards"></div>
 </div>
 
 <script src="products.js"></script>
