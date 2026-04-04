@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <title>KDREPS</title>
 
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: 'Montserrat', sans-serif;
   background: #0a0a0a;
   color: white;
-  overflow-x: hidden;
 }
 
 /* INTRO */
@@ -23,70 +25,80 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 999;
-  animation: fadeOut 1s ease forwards;
+  animation: fadeOut 1s forwards;
   animation-delay: 2.5s;
 }
 
 .logo-big {
-  font-size: 60px;
-  font-weight: bold;
+  font-size: 70px;
+  font-weight: 900;
+  letter-spacing: 2px;
   color: white;
-  text-shadow: 0 0 20px #00ff88;
-  animation: glow 1.5s ease;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 40px #fff;
+  animation: scaleIn 1.2s ease;
 }
 
 /* NAVBAR */
 .navbar {
   position: fixed;
-  top: 10px;
+  top: 15px;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   opacity: 0;
   animation: showNav 1s forwards;
   animation-delay: 2.8s;
 }
 
 .logo-small {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #fff;
 }
 
 .nav-left, .nav-right {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 .nav-btn {
-  padding: 6px 12px;
-  background: #111;
+  font-weight: 700;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #333;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .nav-btn:hover {
-  background: #00ff88;
+  border-color: white;
+  background: white;
   color: black;
   transform: scale(1.1);
 }
 
 /* SEARCH */
 .search {
-  margin-top: 80px;
+  margin-top: 90px;
   display: flex;
   justify-content: center;
 }
 
 .search input {
-  padding: 10px;
-  width: 250px;
-  border-radius: 8px;
+  padding: 12px;
+  width: 280px;
+  border-radius: 10px;
   border: none;
   background: #111;
   color: white;
+  font-family: 'Montserrat';
 }
 
 /* GRID */
@@ -94,25 +106,30 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
-  padding: 15px;
-  margin-top: 20px;
+  padding: 20px;
 }
 
 .card {
   background: #111;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 12px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #222;
 }
 
 .price {
   color: #00ff88;
-  font-weight: bold;
+  font-weight: 700;
 }
 
-/* ANIMATIONS */
-@keyframes glow {
-  0% { opacity: 0; transform: scale(0.6); }
-  100% { opacity: 1; transform: scale(1); }
+/* ANIMACJE */
+@keyframes scaleIn {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes fadeOut {
@@ -135,21 +152,21 @@ body {
 <!-- NAVBAR -->
 <div class="navbar">
   <div class="nav-left">
-    <div class="nav-btn">📊 Kalkulator</div>
-    <div class="nav-btn">🔍 QC</div>
+    <div class="nav-btn">KALKULATOR</div>
+    <div class="nav-btn">QC</div>
   </div>
 
   <div class="logo-small">KDREPS</div>
 
   <div class="nav-right">
-    <div class="nav-btn">📋 Spreadsheet</div>
-    <div class="nav-btn">❤️ Ulubione</div>
+    <div class="nav-btn">SPREADSHEET</div>
+    <div class="nav-btn">ULUBIONE</div>
   </div>
 </div>
 
 <!-- SEARCH -->
 <div class="search">
-  <input type="text" id="search" placeholder="Szukaj...">
+  <input type="text" id="search" placeholder="Szukaj produktu...">
 </div>
 
 <!-- PRODUCTS -->
