@@ -47,27 +47,39 @@ body {
 /* NAVBAR */
 .navbar {
   position: fixed;
-  top: 10px;
+  top: 15px;
+  left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  justify-content: space-between;
+  padding: 0 30px;
   opacity: 0;
   animation: showNav 1s forwards;
   animation-delay: 2.5s;
 }
 
-/* środkowe logo */
+/* LEWA STRONA */
+.nav-left {
+  display: flex;
+  gap: 15px;
+}
+
+/* PRAWA STRONA */
+.nav-right {
+  display: flex;
+  gap: 15px;
+}
+
+/* ŚRODEK */
 .logo-small {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
-  text-shadow: 0 0 6px rgba(255,255,255,0.5);
+  text-shadow: 0 0 8px rgba(255,255,255,0.6);
 }
-
 /* przyciski */
 .nav-btn {
   font-size: 12px;
@@ -96,9 +108,9 @@ body {
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-  padding: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 30px;
 }
 
 .card {
@@ -157,9 +169,16 @@ body {
 </div>
 
 <!-- SEARCH -->
-<div class="search">
-  <input type="text" id="search" placeholder="Szukaj produktu...">
-</div>
+.search {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.search input {
+  width: 400px;
+  max-width: 90%;
+}
 
 <!-- PRODUCTS -->
 <div class="grid" id="products"></div>
@@ -197,6 +216,30 @@ search.addEventListener("input", () => {
 
 render(products);
 </script>
+@media (max-width: 600px) {
 
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .nav-btn {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  .logo-small {
+    font-size: 20px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .search input {
+    width: 100%;
+  }
+}
 </body>
 </html>
