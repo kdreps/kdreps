@@ -13,11 +13,9 @@ body {
   overflow-x: hidden;
 }
 
-/* INTRO LOGO */
+/* INTRO */
 .intro {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100vh;
   background: #0a0a0a;
@@ -26,35 +24,60 @@ body {
   align-items: center;
   z-index: 999;
   animation: fadeOut 1s ease forwards;
-  animation-delay: 2s;
+  animation-delay: 2.5s;
 }
 
-.logo {
-  font-size: 48px;
+.logo-big {
+  font-size: 60px;
   font-weight: bold;
-  animation: scaleIn 1.2s ease;
+  color: white;
+  text-shadow: 0 0 20px #00ff88;
+  animation: glow 1.5s ease;
 }
 
-/* HEADER */
-header {
-  text-align: center;
-  padding: 20px;
-  font-size: 28px;
-  font-weight: bold;
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   opacity: 0;
-  transform: translateY(-30px);
-  animation: showHeader 1s ease forwards;
-  animation-delay: 2.2s;
+  animation: showNav 1s forwards;
+  animation-delay: 2.8s;
+}
+
+.logo-small {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  padding: 6px 12px;
+  background: #111;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-btn:hover {
+  background: #00ff88;
+  color: black;
+  transform: scale(1.1);
 }
 
 /* SEARCH */
 .search {
+  margin-top: 80px;
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 2.5s;
 }
 
 .search input {
@@ -72,20 +95,13 @@ header {
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
   padding: 15px;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 2.8s;
+  margin-top: 20px;
 }
 
 .card {
   background: #111;
   border-radius: 12px;
   padding: 10px;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.05);
 }
 
 .price {
@@ -93,26 +109,17 @@ header {
   font-weight: bold;
 }
 
-.tag {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
 /* ANIMATIONS */
-@keyframes scaleIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes glow {
+  0% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeOut {
   to { opacity: 0; visibility: hidden; }
 }
 
-@keyframes showHeader {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
+@keyframes showNav {
   to { opacity: 1; }
 }
 </style>
@@ -122,31 +129,42 @@ header {
 
 <!-- INTRO -->
 <div class="intro">
-  <div class="logo">KDREPS</div>
+  <div class="logo-big">KDREPS</div>
 </div>
 
-<header>KDREPS</header>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-left">
+    <div class="nav-btn">📊 Kalkulator</div>
+    <div class="nav-btn">🔍 QC</div>
+  </div>
 
+  <div class="logo-small">KDREPS</div>
+
+  <div class="nav-right">
+    <div class="nav-btn">📋 Spreadsheet</div>
+    <div class="nav-btn">❤️ Ulubione</div>
+  </div>
+</div>
+
+<!-- SEARCH -->
 <div class="search">
-  <input type="text" id="search" placeholder="Szukaj produktu...">
+  <input type="text" id="search" placeholder="Szukaj...">
 </div>
 
+<!-- PRODUCTS -->
 <div class="grid" id="products"></div>
 
 <script>
 const products = [
-  { name: "AIR FORCE 1 BIAŁE/CZARNE", price: 65.54, tag: "TOP" },
-  { name: "AIR FORCE 1 x SUPREME", price: 95.54, tag: "TOP" },
-  { name: "AIR FORCE 1 x OFF WHITE", price: 176.13, tag: "TOP" },
-
-  { name: "BLUZA POLO RALPH LAUREN", price: 87.77, tag: "TOP" },
-  { name: "BLUZA YEEZY GAP", price: 152.65, tag: "TOP" },
-
-  { name: "PERFUMY CHANEL 100ML", price: 79.17, tag: "TOP" }
+  { name: "AIR FORCE 1", price: 65.54 },
+  { name: "JORDAN 4", price: 300 },
+  { name: "BLUZA YEEZY GAP", price: 152.65 },
+  { name: "PERFUMY CHANEL", price: 79.17 }
 ];
 
 const container = document.getElementById("products");
-const searchInput = document.getElementById("search");
+const search = document.getElementById("search");
 
 function render(list) {
   container.innerHTML = "";
@@ -155,23 +173,19 @@ function render(list) {
       <div class="card">
         <p>${p.name}</p>
         <p class="price">${p.price} zł</p>
-        <p class="tag">${p.tag}</p>
       </div>
     `;
   });
 }
 
-searchInput.addEventListener("input", () => {
-  const value = searchInput.value.toLowerCase();
-
+search.addEventListener("input", () => {
+  const val = search.value.toLowerCase();
   const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(value)
+    p.name.toLowerCase().includes(val)
   );
-
   render(filtered);
 });
 
-// start
 render(products);
 </script>
 
