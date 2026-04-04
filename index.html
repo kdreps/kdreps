@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>KDREPS</title>
+
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #0a0a0a;
       color: white;
     }
+
     header {
       padding: 20px;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
     }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-      padding: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+      padding: 15px;
     }
+
     .card {
       background: #111;
       border-radius: 12px;
-      overflow: hidden;
+      padding: 10px;
     }
-    .card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
-    .card p {
-      padding: 8px;
-      font-size: 14px;
-    }
+
     .price {
       color: #00ff88;
       font-weight: bold;
     }
+
+    .tag {
+      font-size: 12px;
+      opacity: 0.7;
+    }
   </style>
 </head>
+
 <body>
 
 <header>KDREPS</header>
@@ -50,48 +51,34 @@
 
 <script>
 const products = [
-  {
-    name: "Nike Hoodie",
-    price: "120 zł",
-    image: "https://via.placeholder.com/300",
-    link: "#"
-  },
-  {
-    name: "Jordan 4",
-    price: "300 zł",
-    image: "https://via.placeholder.com/300",
-    link: "#"
-  }
+  { name: "AIR FORCE 1 BIAŁE/CZARNE", price: 65.54, tag: "TOP" },
+  { name: "AIR FORCE 1 x SUPREME", price: 95.54, tag: "TOP" },
+  { name: "AIR FORCE 1 x OFF WHITE", price: 176.13, tag: "TOP" },
+  { name: "AIR FORCE 1 x NOCTA DRAKE", price: 121.59, tag: "TOP" },
+  { name: "AIR FORCE 1 x CPFM", price: 173.59, tag: "TOP" },
+
+  { name: "BLUZA POLO RALPH LAUREN", price: 87.77, tag: "TOP" },
+  { name: "BLUZA GALLERY DEPT", price: 127.31, tag: "TOP" },
+  { name: "BLUZA YEEZY GAP", price: 152.65, tag: "TOP" },
+  { name: "BLUZA SUPREME", price: 171.76, tag: "TOP" },
+
+  { name: "PERFUMY CHANEL 35ML", price: 49.94, tag: "TOP" },
+  { name: "PERFUMY CHANEL 50ML", price: 55.82, tag: "TOP" },
+  { name: "PERFUMY CHANEL 100ML", price: 79.17, tag: "TOP" }
 ];
 
 const container = document.getElementById("products");
 
 products.forEach(p => {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.innerHTML = `
-    <img src="${p.image}" />
-    <p>${p.name}</p>
-    <p class="price">${p.price}</p>
+  container.innerHTML += `
+    <div class="card">
+      <p>${p.name}</p>
+      <p class="price">${p.price} zł</p>
+      <p class="tag">${p.tag}</p>
+    </div>
   `;
-  div.onclick = () => window.open(p.link, "_blank");
-  container.appendChild(div);
 });
 </script>
-<script src="products.js"></script>
 
-<script>
-  const container = document.getElementById("products");
-
-  products.forEach(p => {
-    container.innerHTML += `
-      <div class="card">
-        <p>${p.name}</p>
-        <p class="price">${p.price} zł</p>
-        <p>${p.tag}</p>
-      </div>
-    `;
-  });
-</script>
 </body>
 </html>
