@@ -18,6 +18,25 @@
       font-weight: bold;
     }
 
+    .filters {
+      padding: 10px 20px;
+    }
+
+    .filters button {
+      margin-right: 10px;
+      padding: 8px 12px;
+      background: #111;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .filters button:hover {
+      background: #00ff88;
+      color: black;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -47,37 +66,59 @@
 
 <header>KDREPS</header>
 
+<div class="filters">
+  <button onclick="filterProducts('ALL')">ALL</button>
+  <button onclick="filterProducts('BUTY')">BUTY</button>
+  <button onclick="filterProducts('BLUZY')">BLUZY</button>
+  <button onclick="filterProducts('PERFUMY')">PERFUMY</button>
+</div>
+
 <div class="grid" id="products"></div>
 
 <script>
 const products = [
-  { name: "AIR FORCE 1 BIAŁE/CZARNE", price: 65.54, tag: "TOP" },
-  { name: "AIR FORCE 1 x SUPREME", price: 95.54, tag: "TOP" },
-  { name: "AIR FORCE 1 x OFF WHITE", price: 176.13, tag: "TOP" },
-  { name: "AIR FORCE 1 x NOCTA DRAKE", price: 121.59, tag: "TOP" },
-  { name: "AIR FORCE 1 x CPFM", price: 173.59, tag: "TOP" },
+  // BUTY
+  { name: "AIR FORCE 1 BIAŁE/CZARNE", price: 65.54, tag: "TOP", category: "BUTY" },
+  { name: "AIR FORCE 1 x SUPREME", price: 95.54, tag: "TOP", category: "BUTY" },
+  { name: "AIR FORCE 1 x OFF WHITE", price: 176.13, tag: "TOP", category: "BUTY" },
 
-  { name: "BLUZA POLO RALPH LAUREN", price: 87.77, tag: "TOP" },
-  { name: "BLUZA GALLERY DEPT", price: 127.31, tag: "TOP" },
-  { name: "BLUZA YEEZY GAP", price: 152.65, tag: "TOP" },
-  { name: "BLUZA SUPREME", price: 171.76, tag: "TOP" },
+  // BLUZY
+  { name: "BLUZA POLO RALPH LAUREN", price: 87.77, tag: "TOP", category: "BLUZY" },
+  { name: "BLUZA GALLERY DEPT", price: 127.31, tag: "TOP", category: "BLUZY" },
+  { name: "BLUZA YEEZY GAP", price: 152.65, tag: "TOP", category: "BLUZY" },
 
-  { name: "PERFUMY CHANEL 35ML", price: 49.94, tag: "TOP" },
-  { name: "PERFUMY CHANEL 50ML", price: 55.82, tag: "TOP" },
-  { name: "PERFUMY CHANEL 100ML", price: 79.17, tag: "TOP" }
+  // PERFUMY
+  { name: "PERFUMY CHANEL 35ML", price: 49.94, tag: "TOP", category: "PERFUMY" },
+  { name: "PERFUMY CHANEL 50ML", price: 55.82, tag: "TOP", category: "PERFUMY" },
+  { name: "PERFUMY CHANEL 100ML", price: 79.17, tag: "TOP", category: "PERFUMY" }
 ];
 
 const container = document.getElementById("products");
 
-products.forEach(p => {
-  container.innerHTML += `
-    <div class="card">
-      <p>${p.name}</p>
-      <p class="price">${p.price} zł</p>
-      <p class="tag">${p.tag}</p>
-    </div>
-  `;
-});
+function render(list) {
+  container.innerHTML = "";
+  list.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <p>${p.name}</p>
+        <p class="price">${p.price} zł</p>
+        <p class="tag">${p.tag}</p>
+      </div>
+    `;
+  });
+}
+
+function filterProducts(category) {
+  if (category === "ALL") {
+    render(products);
+  } else {
+    const filtered = products.filter(p => p.category === category);
+    render(filtered);
+  }
+}
+
+// start
+render(products);
 </script>
 
 </body>
