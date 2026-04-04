@@ -1,277 +1,564 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KDREPS</title>
-<style>
-  :root {
-    --bg: #e7e7e7;
-    --text: #080a0f;
-    --muted: #2b2f38;
-    --line: #cfcfcf;
-    --dark-card: #090d14;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    font-family: Inter, "Segoe UI", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-  }
-
-  .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: 72px;
-    background: rgba(231, 231, 231, 0.96);
-    border-bottom: 1px solid var(--line);
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 20px;
-    padding: 0 12px;
-  }
-
-  .brand {
-    font-size: 40px;
-    font-weight: 900;
-    letter-spacing: 1px;
-  }
-
-  .nav-center {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none;
-  }
-
-  .nav-center::-webkit-scrollbar { display: none; }
-
-  .nav-item {
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 8px 14px;
-    font-size: 29px;
-    font-weight: 700;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .nav-item.active {
-    border-color: #0a0d13;
-  }
-
-  .nav-icons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .icon-btn {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    border: 1px solid #22252c;
-    background: #0f131b;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 20px;
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 150px minmax(0, 1fr);
-    gap: 20px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 30px 8px 36px;
-  }
-
-  .catalog h3 {
-    margin: 0 0 8px;
-    font-size: 44px;
-  }
-
-  .catalog a {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    font-size: 37px;
-    font-weight: 700;
-    margin: 5px 0;
-  }
-
-  .hero {
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .hero h1 {
-    margin: 0;
-    font-size: clamp(68px, 9vw, 98px);
-    font-weight: 900;
-  }
-
-  .hero p {
-    margin: 8px 0 18px;
-    font-size: 39px;
-    font-weight: 700;
-  }
-
-  .hero-search {
-    display: inline-flex;
-    border: 2px solid #0a0d13;
-    border-radius: 12px;
-    padding: 8px 22px;
-    font-weight: 800;
-    font-size: 37px;
-  }
-
-  .latest {
-    margin-top: 48px;
-    text-align: left;
-  }
-
-  .latest h2 {
-    margin: 0 0 14px;
-    font-size: 42px;
-  }
-
-  .cards-wrap {
-    background: #080c14;
-    border: 1px solid #101827;
-    padding: 14px;
-    overflow-x: auto;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
-    gap: 12px;
-    min-width: 900px;
-  }
-
-  .card {
-    background: linear-gradient(180deg, #101826 0%, #070b12 100%);
-    border: 1px solid #1c2431;
-    border-radius: 10px;
-    color: #f2f4f7;
-    padding: 12px;
-  }
-
-  .card-media {
-    height: 120px;
-    border-radius: 8px;
-    background: radial-gradient(circle at 25% 15%, #46506a 0%, #121a27 55%, #090d14 100%);
-    margin-bottom: 10px;
-  }
-
-  .card .name {
-    font-size: 16px;
-    font-weight: 700;
-    min-height: 38px;
-  }
-
-  .card .meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #b9c1cf;
-    font-size: 12px;
-  }
-
-  @media (max-width: 930px) {
-    .layout {
-      grid-template-columns: 1fr;
-    }
-
-    .catalog {
-      display: none;
-    }
-
-    .nav-item {
-      font-size: 16px;
-      padding: 6px 10px;
-    }
-
-    .brand {
-      font-size: 28px;
-    }
-
-    .hero p { font-size: 24px; }
-    .hero-search { font-size: 22px; }
-    .latest h2 { font-size: 26px; }
-  }
-</style>
-</head>
-<body>
-  <header class="navbar">
-    <div class="brand">KDREPS</div>
-
-    <nav class="nav-center">
-      <a class="nav-item active" href="#">WYSZUKIWARKA</a>
-      <a class="nav-item" href="#">ŚLEDZENIE DOSTAWY</a>
-      <a class="nav-item" href="#">SPREADSHEET</a>
-      <a class="nav-item" href="#">CAŁY KATALOG</a>
-      <a class="nav-item" href="#">QUALITY CHECK</a>
-      <a class="nav-item" href="#">NARZĘDZIA</a>
-    </nav>
-
-    <div class="nav-icons">
-      <button class="icon-btn" aria-label="Ulubione">♡</button>
-      <button class="icon-btn" aria-label="Ustawienia">⚙</button>
-    </div>
-  </header>
-
-  <div class="layout">
-    <aside class="catalog">
-      <h3>KATALOG</h3>
-      <a href="#">BUTY</a>
-      <a href="#">BLUZY</a>
-      <a href="#">KOSZULKI</a>
-      <a href="#">SPODNIE</a>
-      <a href="#">SPODENKI</a>
-    </aside>
-
-    <main>
-      <section class="hero">
-        <h1>KDREPS</h1>
-        <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
-        <div class="hero-search">WYSZUKIWARKA</div>
-      </section>
-
-      <section class="latest">
-        <h2>OSTATNIO DODANE</h2>
-        <div class="cards-wrap">
-          <div class="cards" id="product-cards"></div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script src="products.js"></script>
-  <script>
-    const container = document.getElementById('product-cards');
-    const items = (typeof products !== 'undefined' ? products : []).slice(0, 4);
-
-    container.innerHTML = items.map((item) => `
-      <article class="card">
-        <div class="card-media"></div>
-        <div class="name">${item.name}</div>
-        <div class="meta">
-          <span>${item.category.toUpperCase()}</span>
-          <strong>$${item.price.toFixed(2)}</strong>
-        </div>
-      </article>
-    `).join('');
-  </script>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+index a5c77c29f8cab70971be78d1c411282382fdcbcd..1f441dcf7005ea7083a329d9c4d35aad59890f7e 100644
+--- a/index.html
++++ b/index.html
+@@ -1,316 +1,277 @@
+ <!DOCTYPE html>
+ <html lang="pl">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>KDREPS</title>
+-
+ <style>
++  :root {
++    --bg: #e7e7e7;
++    --text: #080a0f;
++    --muted: #2b2f38;
++    --line: #cfcfcf;
++    --dark-card: #090d14;
++  }
+ 
+-body {
+-  margin: 0;
+-  font-family: Arial, sans-serif;
+-  background: #0a0a0a;
+-  color: white;
+-}
+-
+-/* ===== NAVBAR ===== */
+-.navbar {
+-  position: fixed;
+-  top: 0;
+-  width: 100%;
+-  height: 70px;
+-
+-  display: flex;
+-  align-items: center;
+-  justify-content: space-between;
+-
+-  padding: 0 30px;
+-
+-  background: rgba(10,10,10,0.95);
+-  border-bottom: 1px solid #1a1a1a;
+-
+-  z-index: 999;
+-}
+-
+-.nav-center {
+-  position: absolute;
+-  left: 50%;
+-  transform: translateX(-50%);
+-  display: flex;
+-  gap: 28px;
+-  white-space: nowrap;
+-}
+-
+-.nav-right {
+-  display: flex;
+-  gap: 12px;
+-  flex-shrink: 0; /* 🔥 zapobiega ucinaniu */
+-}
+-
+-
+-.icon-btn {
+-  border: 1px solid #333;
+-  padding: 6px 10px;
+-  border-radius: 8px;
+-  cursor: pointer;
+-  transition: 0.2s;
+-}
+-
+-.icon-btn:hover {
+-  border-color: white;
+-  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+-}
+-
+-/* LOGO */
+-.logo {
+-  font-size: 22px;
+-  font-weight: 900;
+-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+-}
+-
+-/* NAV ITEM */
+-.nav-item {
+-  display: flex;
+-  align-items: center;
+-  gap: 8px;
+-
+-  color: #eee; /* 🔥 było szare — teraz premium */
+-  font-size: 14px;
+-  font-weight: 600;
+-
+-  cursor: pointer;
+-  transition: 0.25s;
+-}
+-
+-/* IKONA (jak screen – outline) */
+-.icon {
+-  width: 16px;
+-  height: 16px;
+-  border: 1.5px solid white;
+-  border-radius: 4px;
+-}
+-
+-/* HOVER */
+-.nav-item:hover {
+-  color: #fff;
+-  transform: scale(1.08);
+-  text-shadow: 0 0 8px rgba(255,255,255,0.7);
+-}
+-
+-/* PRAWA STRONA */
+-.nav-right {
+-  display: flex;
+-  align-items: center;
+-  gap: 15px;
+-}
+-
+-/* IKONY PRAWE */
+-.icon-btn {
+-  width: 34px;
+-  height: 34px;
+-  display: flex;
+-  align-items: center;
+-  justify-content: center;
+-  border: 1px solid #333;
+-  border-radius: 8px;
+-  cursor: pointer;
+-  transition: 0.25s;
+-}
+-
+-.icon-btn:hover {
+-  border-color: white;
+-  box-shadow: 0 0 10px rgba(255,255,255,0.4);
+-}
+-
+-/* ===== HERO ===== */
+-.hero {
+-  margin-top: 120px;
+-  text-align: center;
+-}
+-
+-.hero h1 {
+-  font-size: 80px;
+-  margin: 0;
+-  font-weight: 900;
+-  text-shadow: 0 0 20px rgba(255,255,255,0.5);
+-}
+-
+-.hero p {
+-  color: #aaa;
+-  margin-top: 10px;
+-}
+-
+-/* SEARCH */
+-.search {
+-  margin-top: 30px;
+-}
+-
+-.search input {
+-  width: 420px;
+-  max-width: 90%;
+-  padding: 14px;
+-  border-radius: 12px;
+-  border: 1px solid #333;
+-  background: #111;
+-  color: white;
+-}
+-
+-.search input:focus {
+-  outline: none;
+-  border-color: white;
+-  box-shadow: 0 0 15px rgba(255,255,255,0.4);
+-}
+-
+-/* DISCORD */
+-.discord {
+-  margin-top: 15px;
+-}
+-
+-.discord a {
+-  color: #aaa;
+-  text-decoration: none;
+-}
+-
+-.discord a:hover {
+-  color: white;
+-}
+-
+-/* ===== KATALOG (LEWA STRONA) ===== */
+-.catalog {
+-  position: fixed;
+-  left: 20px;
+-  top: 100px;
+-}
+-
+-.catalog h3 {
+-  margin-bottom: 10px;
+-}
+-
+-.catalog div {
+-  color: #aaa;
+-  margin: 6px 0;
+-  cursor: pointer;
+-  transition: 0.2s;
+-}
+-
+-.catalog div:hover {
+-  color: white;
+-  transform: translateX(5px);
+-}
+-
+-/* MOBILE */
+-@media (max-width: 700px) {
+-
+-  .nav-left .nav-item {
+-    display: none;
++  * { box-sizing: border-box; }
++
++  body {
++    margin: 0;
++    font-family: Inter, "Segoe UI", Arial, sans-serif;
++    background: var(--bg);
++    color: var(--text);
+   }
+ 
+-  .catalog {
+-    display: none;
++  .navbar {
++    position: sticky;
++    top: 0;
++    z-index: 100;
++    height: 72px;
++    background: rgba(231, 231, 231, 0.96);
++    border-bottom: 1px solid var(--line);
++    display: grid;
++    grid-template-columns: auto minmax(0, 1fr) auto;
++    align-items: center;
++    gap: 20px;
++    padding: 0 12px;
+   }
+ 
+-  .hero h1 {
++  .brand {
+     font-size: 40px;
++    font-weight: 900;
++    letter-spacing: 1px;
+   }
+ 
+-}
++  .nav-center {
++    min-width: 0;
++    display: flex;
++    align-items: center;
++    gap: 14px;
++    overflow-x: auto;
++    white-space: nowrap;
++    scrollbar-width: none;
++  }
+ 
+-</style>
+-</head>
++  .nav-center::-webkit-scrollbar { display: none; }
+ 
+-<body>
++  .nav-item {
++    border: 2px solid transparent;
++    border-radius: 12px;
++    padding: 8px 14px;
++    font-size: 29px;
++    font-weight: 700;
++    text-decoration: none;
++    color: inherit;
++  }
+ 
+-<!-- NAVBAR -->
+-<div class="navbar">
++  .nav-item.active {
++    border-color: #0a0d13;
++  }
+ 
+-  <!-- LEWO -->
+-  <div class="logo">KDREPS</div>
++  .nav-icons {
++    display: flex;
++    align-items: center;
++    gap: 8px;
++  }
+ 
+-  <!-- ŚRODEK -->
+-  <div class="nav-center">
++  .icon-btn {
++    width: 40px;
++    height: 40px;
++    display: grid;
++    place-items: center;
++    border: 1px solid #22252c;
++    background: #0f131b;
++    color: #fff;
++    border-radius: 4px;
++    font-size: 20px;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <circle cx="8" cy="8" r="6"></circle>
+-        <line x1="13" y1="13" x2="17" y2="17"></line>
+-      </svg>
+-      WYSZUKIWARKA
+-    </div>
++  .layout {
++    display: grid;
++    grid-template-columns: 150px minmax(0, 1fr);
++    gap: 20px;
++    max-width: 1280px;
++    margin: 0 auto;
++    padding: 30px 8px 36px;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <rect x="3" y="3" width="12" height="12"></rect>
+-      </svg>
+-      ŚLEDZENIE
+-    </div>
++  .catalog h3 {
++    margin: 0 0 8px;
++    font-size: 44px;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <path d="M3 3h12v12H3z"></path>
+-      </svg>
+-      SPREADSHEET
+-    </div>
++  .catalog a {
++    display: block;
++    text-decoration: none;
++    color: inherit;
++    font-size: 37px;
++    font-weight: 700;
++    margin: 5px 0;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <circle cx="9" cy="9" r="6"></circle>
+-      </svg>
+-      KATALOG
+-    </div>
++  .hero {
++    text-align: center;
++    margin-top: 10px;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <path d="M4 4h10v10H4z"></path>
+-      </svg>
+-      QC
+-    </div>
++  .hero h1 {
++    margin: 0;
++    font-size: clamp(68px, 9vw, 98px);
++    font-weight: 900;
++  }
+ 
+-    <div class="nav-item">
+-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+-        <circle cx="9" cy="9" r="2"></circle>
+-      </svg>
+-      NARZĘDZIA
+-    </div>
++  .hero p {
++    margin: 8px 0 18px;
++    font-size: 39px;
++    font-weight: 700;
++  }
+ 
+-  </div>
++  .hero-search {
++    display: inline-flex;
++    border: 2px solid #0a0d13;
++    border-radius: 12px;
++    padding: 8px 22px;
++    font-weight: 800;
++    font-size: 37px;
++  }
+ 
+-  <!-- PRAWO -->
+-  <div class="nav-right">
+-    <div class="icon-btn">♡</div>
+-    <div class="icon-btn">📋</div>
+-    <div class="icon-btn">⚙</div>
+-  </div>
++  .latest {
++    margin-top: 48px;
++    text-align: left;
++  }
++
++  .latest h2 {
++    margin: 0 0 14px;
++    font-size: 42px;
++  }
+ 
+-</div>
++  .cards-wrap {
++    background: #080c14;
++    border: 1px solid #101827;
++    padding: 14px;
++    overflow-x: auto;
++  }
+ 
+-<!-- HERO -->
+-<div class="hero">
++  .cards {
++    display: grid;
++    grid-template-columns: repeat(4, minmax(220px, 1fr));
++    gap: 12px;
++    min-width: 900px;
++  }
+ 
+-  <h1>KDREPS</h1>
+-  <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
++  .card {
++    background: linear-gradient(180deg, #101826 0%, #070b12 100%);
++    border: 1px solid #1c2431;
++    border-radius: 10px;
++    color: #f2f4f7;
++    padding: 12px;
++  }
+ 
+-  <div class="search">
+-    <input type="text" placeholder="Wyszukiwarka...">
+-  </div>
++  .card-media {
++    height: 120px;
++    border-radius: 8px;
++    background: radial-gradient(circle at 25% 15%, #46506a 0%, #121a27 55%, #090d14 100%);
++    margin-bottom: 10px;
++  }
+ 
+-  <div class="discord">
+-    <a href="https://discord.gg/vJTNhqHSNh" target="_blank">
+-      Dołącz do społeczności
+-    </a>
+-  </div>
++  .card .name {
++    font-size: 16px;
++    font-weight: 700;
++    min-height: 38px;
++  }
++
++  .card .meta {
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++    color: #b9c1cf;
++    font-size: 12px;
++  }
++
++  @media (max-width: 930px) {
++    .layout {
++      grid-template-columns: 1fr;
++    }
++
++    .catalog {
++      display: none;
++    }
++
++    .nav-item {
++      font-size: 16px;
++      padding: 6px 10px;
++    }
+ 
+-</div>
++    .brand {
++      font-size: 28px;
++    }
+ 
+-<!-- KATALOG -->
+-<div class="catalog">
+-  <h3>KATALOG</h3>
+-  <div>BUTY</div>
+-  <div>BLUZY</div>
+-  <div>KOSZULKI</div>
+-  <div>SPODNIE</div>
+-  <div>SPODENKI</div>
+-</div>
++    .hero p { font-size: 24px; }
++    .hero-search { font-size: 22px; }
++    .latest h2 { font-size: 26px; }
++  }
++</style>
++</head>
++<body>
++  <header class="navbar">
++    <div class="brand">KDREPS</div>
++
++    <nav class="nav-center">
++      <a class="nav-item active" href="#">WYSZUKIWARKA</a>
++      <a class="nav-item" href="#">ŚLEDZENIE DOSTAWY</a>
++      <a class="nav-item" href="#">SPREADSHEET</a>
++      <a class="nav-item" href="#">CAŁY KATALOG</a>
++      <a class="nav-item" href="#">QUALITY CHECK</a>
++      <a class="nav-item" href="#">NARZĘDZIA</a>
++    </nav>
++
++    <div class="nav-icons">
++      <button class="icon-btn" aria-label="Ulubione">♡</button>
++      <button class="icon-btn" aria-label="Ustawienia">⚙</button>
++    </div>
++  </header>
++
++  <div class="layout">
++    <aside class="catalog">
++      <h3>KATALOG</h3>
++      <a href="#">BUTY</a>
++      <a href="#">BLUZY</a>
++      <a href="#">KOSZULKI</a>
++      <a href="#">SPODNIE</a>
++      <a href="#">SPODENKI</a>
++    </aside>
++
++    <main>
++      <section class="hero">
++        <h1>KDREPS</h1>
++        <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
++        <div class="hero-search">WYSZUKIWARKA</div>
++      </section>
++
++      <section class="latest">
++        <h2>OSTATNIO DODANE</h2>
++        <div class="cards-wrap">
++          <div class="cards" id="product-cards"></div>
++        </div>
++      </section>
++    </main>
++  </div>
+ 
++  <script src="products.js"></script>
++  <script>
++    const container = document.getElementById('product-cards');
++    const items = (typeof products !== 'undefined' ? products : []).slice(0, 4);
++
++    container.innerHTML = items.map((item) => `
++      <article class="card">
++        <div class="card-media"></div>
++        <div class="name">${item.name}</div>
++        <div class="meta">
++          <span>${item.category.toUpperCase()}</span>
++          <strong>$${item.price.toFixed(2)}</strong>
++        </div>
++      </article>
++    `).join('');
++  </script>
+ </body>
+ </html>
+ 
+EOF
+)
