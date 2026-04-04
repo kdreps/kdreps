@@ -14,94 +14,70 @@ body {
   color: white;
 }
 
-/* ===== INTRO LOGO ===== */
-.intro {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 70px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-shadow: 0 0 15px rgba(255,255,255,0.5);
-  animation: introAnim 2.5s forwards;
-}
-
-@keyframes introAnim {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-  50% { opacity: 1; }
-  100% {
-    transform: translate(-50%, -250%);
-    opacity: 0;
-  }
-}
-
 /* ===== NAVBAR ===== */
 .navbar {
   position: fixed;
-  top: 15px;
+  top: 0;
   width: 100%;
+  padding: 15px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
-  opacity: 0;
-  animation: showNav 1s forwards;
-  animation-delay: 2.5s;
+  gap: 25px;
+  background: rgba(10,10,10,0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
 }
 
-@keyframes showNav {
-  to { opacity: 1; }
-}
-
+/* LOGO */
 .logo {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
-  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  text-shadow: 0 0 12px rgba(255,255,255,0.6);
 }
 
-/* BUTTONY NAV */
-.nav-btn {
-  background: transparent;
-  border: 1px solid #444;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
+/* NAV ITEM */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.25s ease;
 }
 
-.nav-btn:hover {
-  border-color: white;
-  box-shadow: 0 0 10px rgba(255,255,255,0.4);
+/* HOVER */
+.nav-item:hover {
+  transform: scale(1.08);
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
 }
 
 /* ===== HERO ===== */
 .hero {
   margin-top: 160px;
   text-align: center;
-  opacity: 0;
-  animation: fadeIn 1s forwards;
-  animation-delay: 2.8s;
 }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
+/* DUŻY NAPIS */
 .hero h1 {
   font-size: 70px;
   margin: 0;
+  font-weight: 900;
+  text-shadow: 0 0 20px rgba(255,255,255,0.4);
 }
 
+/* OPIS */
 .hero p {
+  margin-top: 10px;
   color: #aaa;
-  margin: 15px 0 30px;
-  font-size: 18px;
 }
 
 /* SEARCH */
+.search {
+  margin-top: 30px;
+}
+
 .search input {
   width: 420px;
   max-width: 90%;
@@ -110,53 +86,42 @@ body {
   border: 1px solid #333;
   background: #111;
   color: white;
-  font-size: 14px;
-}
-
-/* BUTTONY */
-.hero-buttons {
-  margin-top: 30px;
-}
-
-.hero-buttons a {
-  text-decoration: none;
-}
-
-.btn {
-  background: #111;
-  border: 1px solid #333;
-  color: white;
-  padding: 12px 22px;
-  border-radius: 20px;
-  margin: 0 10px;
-  cursor: pointer;
   transition: 0.3s;
 }
 
-.btn:hover {
+/* SEARCH HOVER */
+.search input:focus {
+  outline: none;
   border-color: white;
-  box-shadow: 0 0 12px rgba(255,255,255,0.4);
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+/* DISCORD */
+.discord {
+  margin-top: 15px;
+}
+
+.discord a {
+  color: #aaa;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.discord a:hover {
+  color: white;
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {
 
-  .hero h1 {
-    font-size: 40px;
-  }
-
-  .logo {
-    font-size: 22px;
-  }
-
-  .nav-btn {
-    font-size: 10px;
-    padding: 5px 8px;
-  }
-
   .navbar {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
   }
 
 }
@@ -166,38 +131,37 @@ body {
 
 <body>
 
-<!-- INTRO -->
-<div class="intro">KDREPS</div>
-
 <!-- NAVBAR -->
 <div class="navbar">
 
-  <button class="nav-btn">KALKULATOR</button>
-  <button class="nav-btn">QC</button>
-
+  <div class="nav-item">🔍 WYSZUKIWARKA</div>
+  <div class="nav-item">📦 ŚLEDZENIE DOSTAWY</div>
+  
   <div class="logo">KDREPS</div>
-
-  <button class="nav-btn">SPREADSHEET</button>
-  <button class="nav-btn">ULUBIONE</button>
+  
+  <div class="nav-item">📊 SPREADSHEET</div>
+  <div class="nav-item">🛍️ CAŁY KATALOG</div>
+  <div class="nav-item">🧪 QUALITY CHECK</div>
+  <div class="nav-item">🛠️ NARZĘDZIA</div>
+  <div class="nav-item">❤️</div>
+  <div class="nav-item">⚙️</div>
 
 </div>
 
 <!-- HERO -->
 <div class="hero">
 
-  <h1>KDREPS.COM</h1>
+  <h1>KDREPS</h1>
   <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
 
   <div class="search">
-    <input type="text" placeholder="Szukaj produktu...">
+    <input type="text" placeholder="Wyszukiwarka...">
   </div>
 
-  <div class="hero-buttons">
+  <div class="discord">
     <a href="https://discord.gg/vJTNhqHSNh" target="_blank">
-      <button class="btn">Dołącz do społeczności</button>
+      Dołącz do społeczności
     </a>
-
-    <button class="btn">Przeglądaj</button>
   </div>
 
 </div>
