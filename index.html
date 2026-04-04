@@ -6,139 +6,72 @@
 <title>KDREPS</title>
 <style>
   :root {
-    --bg: #050608;
-    --panel: #0c0e12;
-    --panel-2: #10131a;
-    --line: #1b1f27;
-    --text: #f3f4f6;
-    --muted: #a6adbb;
+    --bg: #e7e7e7;
+    --text: #080a0f;
+    --muted: #2b2f38;
+    --line: #cfcfcf;
+    --dark-card: #090d14;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
     font-family: Inter, "Segoe UI", Arial, sans-serif;
-    background: radial-gradient(circle at 50% -20%, #121826 0%, var(--bg) 34%);
+    background: var(--bg);
     color: var(--text);
-    overflow-x: hidden;
   }
 
   .navbar {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 78px;
+    z-index: 100;
+    height: 72px;
+    background: rgba(231, 231, 231, 0.96);
+    border-bottom: 1px solid var(--line);
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: 18px;
-    padding: 0 18px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(6, 8, 12, 0.96);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
+    gap: 20px;
+    padding: 0 12px;
   }
 
-  .logo {
-    width: 48px;
-    height: 48px;
-    border: 2px solid #697182;
-    display: grid;
-    place-items: center;
-    font-size: 28px;
+  .brand {
+    font-size: 40px;
     font-weight: 900;
-    line-height: 1;
-  }
-
-  .nav-main {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    overflow: hidden;
-  }
-
-  .search-chip {
-    min-width: 160px;
-    max-width: 180px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 14px;
-    border: 1px solid #28303e;
-    border-radius: 8px;
-    color: #d7dbe4;
-    background: linear-gradient(120deg, #0d1118, #0a0e14);
-    flex-shrink: 0;
-  }
-
-  .search-chip .kbd {
-    margin-left: auto;
-    border: 1px solid #353d4a;
-    border-radius: 6px;
-    padding: 1px 6px;
-    font-size: 11px;
-    color: #c3cad6;
+    letter-spacing: 1px;
   }
 
   .nav-center {
+    min-width: 0;
     display: flex;
     align-items: center;
-    gap: 24px;
-    white-space: nowrap;
-    min-width: 0;
+    gap: 14px;
     overflow-x: auto;
+    white-space: nowrap;
     scrollbar-width: none;
   }
 
-  .nav-center::-webkit-scrollbar {
-    display: none;
-  }
+  .nav-center::-webkit-scrollbar { display: none; }
 
   .nav-item {
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-size: 29px;
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .nav-item.active {
+    border-color: #0a0d13;
+  }
+
+  .nav-icons {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #e8ecf4;
-    font-size: 14px;
-    cursor: pointer;
-    opacity: 0.92;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .nav-item span {
-    font-size: 14px;
-    font-weight: 550;
-  }
-
-  .nav-item:hover {
-    opacity: 1;
-    transform: translateY(-1px);
-  }
-
-  .nav-item svg,
-  .icon-btn svg,
-  .search-chip svg,
-  .catalog-title svg,
-  .catalog-item svg,
-  .newest-title svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
   }
 
   .icon-btn {
@@ -146,250 +79,199 @@
     height: 40px;
     display: grid;
     place-items: center;
-    border: 1px solid #2b313d;
-    border-radius: 9px;
-    color: #f2f5fa;
-    background: #0a0d12;
+    border: 1px solid #22252c;
+    background: #0f131b;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 20px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 20px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 30px 8px 36px;
+  }
+
+  .catalog h3 {
+    margin: 0 0 8px;
+    font-size: 44px;
+  }
+
+  .catalog a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    font-size: 37px;
+    font-weight: 700;
+    margin: 5px 0;
   }
 
   .hero {
-    margin-top: 140px;
-    min-height: 540px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     text-align: center;
-    padding: 0 20px;
+    margin-top: 10px;
   }
 
   .hero h1 {
     margin: 0;
-    font-size: clamp(64px, 9vw, 124px);
-    letter-spacing: -1.5px;
-    font-weight: 800;
+    font-size: clamp(68px, 9vw, 98px);
+    font-weight: 900;
   }
 
   .hero p {
-    margin-top: 18px;
-    margin-bottom: 34px;
-    color: #d0d6df;
-    font-size: clamp(18px, 2.2vw, 38px);
-    font-weight: 500;
-  }
-
-  .search-wrap {
-    width: min(760px, 92vw);
-    margin-bottom: 28px;
-  }
-
-  .search {
-    width: 100%;
-    height: 48px;
-    border: 1px solid #222938;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #11131a, #131722);
-    display: flex;
-    align-items: center;
-    padding: 0 18px;
-    gap: 12px;
-  }
-
-  .search input {
-    border: 0;
-    outline: none;
-    width: 100%;
-    background: transparent;
-    color: white;
-    font-size: 20px;
-  }
-
-  .search input::placeholder {
-    color: #8f97a6;
-  }
-
-  .hero-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .hero-actions a {
-    color: #eef2f8;
-    text-decoration: none;
-  }
-
-  .browse-btn {
-    border: 2px solid #d9dee9;
-    border-radius: 999px;
-    padding: 12px 24px;
-    background: transparent;
-    color: #fff;
-    font-size: 22px;
-    font-weight: 600;
-  }
-
-  .catalog {
-    position: fixed;
-    left: 0;
-    top: 108px;
-    width: 220px;
-    padding: 0 16px;
-  }
-
-  .catalog-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 20px;
+    margin: 8px 0 18px;
+    font-size: 39px;
     font-weight: 700;
   }
 
-  .catalog-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 22px;
-    color: #d8dee8;
-    margin: 8px 0;
-  }
-
-  .newest {
-    border-top: 1px solid var(--line);
-    padding: 22px 0 26px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-
-  .newest-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 44px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    margin-left: 6px;
-  }
-
-  .newest p {
-    margin: 0;
-    color: #cfd5e0;
-    font-size: 24px;
-    margin-left: 6px;
-  }
-
-  .view-all {
-    color: #f1f5fb;
-    text-decoration: none;
-    font-size: 24px;
-    margin-right: 12px;
+  .hero-search {
     display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    border: 2px solid #0a0d13;
+    border-radius: 12px;
+    padding: 8px 22px;
+    font-weight: 800;
+    font-size: 37px;
   }
 
-  @media (max-width: 1400px) {
+  .latest {
+    margin-top: 48px;
+    text-align: left;
+  }
+
+  .latest h2 {
+    margin: 0 0 14px;
+    font-size: 42px;
+  }
+
+  .cards-wrap {
+    background: #080c14;
+    border: 1px solid #101827;
+    padding: 14px;
+    overflow-x: auto;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 12px;
+    min-width: 900px;
+  }
+
+  .card {
+    background: linear-gradient(180deg, #101826 0%, #070b12 100%);
+    border: 1px solid #1c2431;
+    border-radius: 10px;
+    color: #f2f4f7;
+    padding: 12px;
+  }
+
+  .card-media {
+    height: 120px;
+    border-radius: 8px;
+    background: radial-gradient(circle at 25% 15%, #46506a 0%, #121a27 55%, #090d14 100%);
+    margin-bottom: 10px;
+  }
+
+  .card .name {
+    font-size: 16px;
+    font-weight: 700;
+    min-height: 38px;
+  }
+
+  .card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #b9c1cf;
+    font-size: 12px;
+  }
+
+  @media (max-width: 930px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
     .catalog {
       display: none;
     }
-  }
 
-  @media (max-width: 1100px) {
-    .search-chip {
-      display: none;
+    .nav-item {
+      font-size: 16px;
+      padding: 6px 10px;
     }
 
-    .hero h1 {
-      font-size: clamp(52px, 8vw, 92px);
+    .brand {
+      font-size: 28px;
     }
 
-    .newest-title {
-      font-size: 32px;
-    }
-
-    .newest p,
-    .view-all {
-      font-size: 18px;
-    }
-  }
-
-  @media (max-width: 860px) {
-    .nav-center {
-      display: none;
-    }
-
-    .hero {
-      margin-top: 120px;
-    }
+    .hero p { font-size: 24px; }
+    .hero-search { font-size: 22px; }
+    .latest h2 { font-size: 26px; }
   }
 </style>
 </head>
 <body>
   <header class="navbar">
-    <div class="logo">FR</div>
+    <div class="brand">KDREPS</div>
 
-    <div class="nav-main">
-      <div class="search-chip">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg>
-        <span>Search...</span>
-        <span class="kbd">⌘ K</span>
-      </div>
+    <nav class="nav-center">
+      <a class="nav-item active" href="#">WYSZUKIWARKA</a>
+      <a class="nav-item" href="#">ŚLEDZENIE DOSTAWY</a>
+      <a class="nav-item" href="#">SPREADSHEET</a>
+      <a class="nav-item" href="#">CAŁY KATALOG</a>
+      <a class="nav-item" href="#">QUALITY CHECK</a>
+      <a class="nav-item" href="#">NARZĘDZIA</a>
+    </nav>
 
-      <nav class="nav-center">
-        <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"></rect><line x1="9" y1="8" x2="15" y2="8"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg><span>Spreadsheet</span></div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg><span>Browse Finds</span></div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span>Quality checks</span></div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 6h-4l-2-2h-4L8 6H4v14h16z"></path></svg><span>Outfits</span></div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 8h12"></path><path d="M7 8v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8"></path><path d="M9 12h6"></path></svg><span>Sellers</span></div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 7l3 3"></path><path d="M4 20l5.5-1.5L20 8a2.1 2.1 0 0 0-3-3L6.5 15.5z"></path></svg><span>Tools</span></div>
-      </nav>
-    </div>
-
-    <div class="nav-right">
-      <button class="icon-btn" aria-label="Ulubione"><svg viewBox="0 0 24 24"><path d="M20.8 8.6c0 6.3-8.8 11.4-8.8 11.4S3.2 14.9 3.2 8.6A4.8 4.8 0 0 1 12 6a4.8 4.8 0 0 1 8.8 2.6z"></path></svg></button>
-      <button class="icon-btn" aria-label="Lista"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"></rect><line x1="9" y1="8" x2="15" y2="8"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg></button>
-      <button class="icon-btn" aria-label="Ustawienia"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.7l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.7-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.7.3l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.7 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.7l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.7.3h.1a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 1 1.5h.1a1.6 1.6 0 0 0 1.7-.3l.1-.1a2 2 0 0 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.7v.1a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.5 1z"></path></svg></button>
+    <div class="nav-icons">
+      <button class="icon-btn" aria-label="Ulubione">♡</button>
+      <button class="icon-btn" aria-label="Ustawienia">⚙</button>
     </div>
   </header>
 
-  <aside class="catalog">
-    <div class="catalog-title"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4z"></path><path d="M3 17l9 4 9-4"></path><path d="M3 12l9 4 9-4"></path></svg>Katalog</div>
-    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M4 16l3-9h10l3 9"></path><path d="M2 16h20"></path></svg>Buty</div>
-    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l2 6H6z"></path><path d="M6 10v10h12V10"></path></svg>Bluzy</div>
-    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l2 3-3 2v11H9V9L6 7z"></path></svg>Koszulki</div>
-    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 3h8v6l-2 12h-4L8 9z"></path></svg>Spodnie</div>
-    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l-1 8H9z"></path><path d="M9 12v8"></path><path d="M15 12v8"></path></svg>Spodenki</div>
-  </aside>
+  <div class="layout">
+    <aside class="catalog">
+      <h3>KATALOG</h3>
+      <a href="#">BUTY</a>
+      <a href="#">BLUZY</a>
+      <a href="#">KOSZULKI</a>
+      <a href="#">SPODNIE</a>
+      <a href="#">SPODENKI</a>
+    </aside>
 
-  <main class="hero">
-    <h1>cadenreps.pl</h1>
-    <p>More than just your spreadsheet</p>
+    <main>
+      <section class="hero">
+        <h1>KDREPS</h1>
+        <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
+        <div class="hero-search">WYSZUKIWARKA</div>
+      </section>
 
-    <div class="search-wrap">
-      <div class="search">
-        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#d7dce6;fill:none;stroke-width:2"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg>
-        <input type="text" placeholder="Search...">
-      </div>
-    </div>
+      <section class="latest">
+        <h2>OSTATNIO DODANE</h2>
+        <div class="cards-wrap">
+          <div class="cards" id="product-cards"></div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-    <div class="hero-actions">
-      <a href="https://discord.gg/vJTNhqHSNh" target="_blank" rel="noopener noreferrer">Join the community</a>
-      <button class="browse-btn">Browse Finds →</button>
-    </div>
-  </main>
+  <script src="products.js"></script>
+  <script>
+    const container = document.getElementById('product-cards');
+    const items = (typeof products !== 'undefined' ? products : []).slice(0, 4);
 
-  <section class="newest">
-    <div>
-      <div class="newest-title"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4z"></path><path d="M3 17l9 4 9-4"></path><path d="M3 12l9 4 9-4"></path></svg>Newest Finds</div>
-      <p>Latest W2C drops from trusted sellers.</p>
-    </div>
-    <a class="view-all" href="#">View all →</a>
-  </section>
+    container.innerHTML = items.map((item) => `
+      <article class="card">
+        <div class="card-media"></div>
+        <div class="name">${item.name}</div>
+        <div class="meta">
+          <span>${item.category.toUpperCase()}</span>
+          <strong>$${item.price.toFixed(2)}</strong>
+        </div>
+      </article>
+    `).join('');
+  </script>
 </body>
 </html>
