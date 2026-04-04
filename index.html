@@ -4,240 +4,392 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KDREPS</title>
-
 <style>
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0a0a0a;
-  color: white;
-  overflow-x: hidden;
-}
-
-/* ===== NAVBAR ===== */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 70px;
-
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 20px;
-
-  box-sizing: border-box;
-  padding: 0 30px;
-
-  background: rgba(10,10,10,0.95);
-  border-bottom: 1px solid #1a1a1a;
-
-  z-index: 999;
-}
-
-.nav-center {
-  justify-self: center;
-  display: flex;
-  gap: 24px;
-  white-space: nowrap;
-  min-width: 0;
-}
-
-/* LOGO */
-.logo {
-  font-size: 22px;
-  font-weight: 900;
-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
-}
-
-/* NAV ITEM */
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  color: #eee;
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.nav-item:hover {
-  color: #fff;
-  transform: scale(1.08);
-  text-shadow: 0 0 8px rgba(255,255,255,0.7);
-}
-
-/* PRAWA STRONA */
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-/* IKONY PRAWE */
-.icon-btn {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #333;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.icon-btn:hover {
-  border-color: white;
-  box-shadow: 0 0 10px rgba(255,255,255,0.4);
-}
-
-/* ===== HERO ===== */
-.hero {
-  margin-top: 120px;
-  text-align: center;
-}
-@@ -178,139 +152,138 @@ body {
-
-/* ===== KATALOG (LEWA STRONA) ===== */
-.catalog {
-  position: fixed;
-  left: 20px;
-  top: 100px;
-}
-
-.catalog h3 {
-  margin-bottom: 10px;
-}
-
-.catalog div {
-  color: #aaa;
-  margin: 6px 0;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.catalog div:hover {
-  color: white;
-  transform: translateX(5px);
-}
-
-/* MOBILE */
-@media (max-width: 1280px) {
-  .nav-center {
-    justify-self: start;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
-  }
-}
-
-@media (max-width: 900px) {
-  .nav-center {
-    display: none;
+  :root {
+    --bg: #050608;
+    --panel: #0c0e12;
+    --panel-2: #10131a;
+    --line: #1b1f27;
+    --text: #f3f4f6;
+    --muted: #a6adbb;
   }
 
-  .hero h1 {
-    font-size: 56px;
-  }
-}
-
-@media (max-width: 700px) {
-  .catalog {
-    display: none;
+  * {
+    box-sizing: border-box;
   }
 
-  .hero h1 {
-    font-size: 40px;
+  body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at 50% -20%, #121826 0%, var(--bg) 34%);
+    color: var(--text);
+    overflow-x: hidden;
   }
 
   .navbar {
-    padding: 0 12px;
-    gap: 8px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 78px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(6, 8, 12, 0.96);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
   }
-}
 
+  .logo {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #697182;
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .nav-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    overflow: hidden;
+  }
+
+  .search-chip {
+    min-width: 160px;
+    max-width: 180px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 1px solid #28303e;
+    border-radius: 8px;
+    color: #d7dbe4;
+    background: linear-gradient(120deg, #0d1118, #0a0e14);
+    flex-shrink: 0;
+  }
+
+  .search-chip .kbd {
+    margin-left: auto;
+    border: 1px solid #353d4a;
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: 11px;
+    color: #c3cad6;
+  }
+
+  .nav-center {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    white-space: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-center::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e8ecf4;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.92;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .nav-item span {
+    font-size: 14px;
+    font-weight: 550;
+  }
+
+  .nav-item:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+
+  .nav-item svg,
+  .icon-btn svg,
+  .search-chip svg,
+  .catalog-title svg,
+  .catalog-item svg,
+  .newest-title svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #2b313d;
+    border-radius: 9px;
+    color: #f2f5fa;
+    background: #0a0d12;
+  }
+
+  .hero {
+    margin-top: 140px;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(64px, 9vw, 124px);
+    letter-spacing: -1.5px;
+    font-weight: 800;
+  }
+
+  .hero p {
+    margin-top: 18px;
+    margin-bottom: 34px;
+    color: #d0d6df;
+    font-size: clamp(18px, 2.2vw, 38px);
+    font-weight: 500;
+  }
+
+  .search-wrap {
+    width: min(760px, 92vw);
+    margin-bottom: 28px;
+  }
+
+  .search {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #222938;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #11131a, #131722);
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 12px;
+  }
+
+  .search input {
+    border: 0;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    color: white;
+    font-size: 20px;
+  }
+
+  .search input::placeholder {
+    color: #8f97a6;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .hero-actions a {
+    color: #eef2f8;
+    text-decoration: none;
+  }
+
+  .browse-btn {
+    border: 2px solid #d9dee9;
+    border-radius: 999px;
+    padding: 12px 24px;
+    background: transparent;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .catalog {
+    position: fixed;
+    left: 0;
+    top: 108px;
+    width: 220px;
+    padding: 0 16px;
+  }
+
+  .catalog-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .catalog-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    color: #d8dee8;
+    margin: 8px 0;
+  }
+
+  .newest {
+    border-top: 1px solid var(--line);
+    padding: 22px 0 26px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .newest-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 44px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-left: 6px;
+  }
+
+  .newest p {
+    margin: 0;
+    color: #cfd5e0;
+    font-size: 24px;
+    margin-left: 6px;
+  }
+
+  .view-all {
+    color: #f1f5fb;
+    text-decoration: none;
+    font-size: 24px;
+    margin-right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 1400px) {
+    .catalog {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .search-chip {
+      display: none;
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 8vw, 92px);
+    }
+
+    .newest-title {
+      font-size: 32px;
+    }
+
+    .newest p,
+    .view-all {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .nav-center {
+      display: none;
+    }
+
+    .hero {
+      margin-top: 120px;
+    }
+  }
 </style>
 </head>
-
 <body>
+  <header class="navbar">
+    <div class="logo">FR</div>
 
-<!-- NAVBAR -->
-<div class="navbar">
+    <div class="nav-main">
+      <div class="search-chip">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg>
+        <span>Search...</span>
+        <span class="kbd">⌘ K</span>
+      </div>
 
-  <!-- LEWO -->
-  <div class="logo">KDREPS</div>
-
-  <!-- ŚRODEK -->
-  <div class="nav-center">
-
-    <div class="nav-item">
-      🔎 WYSZUKIWARKA
+      <nav class="nav-center">
+        <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"></rect><line x1="9" y1="8" x2="15" y2="8"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg><span>Spreadsheet</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg><span>Browse Finds</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span>Quality checks</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 6h-4l-2-2h-4L8 6H4v14h16z"></path></svg><span>Outfits</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 8h12"></path><path d="M7 8v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8"></path><path d="M9 12h6"></path></svg><span>Sellers</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 7l3 3"></path><path d="M4 20l5.5-1.5L20 8a2.1 2.1 0 0 0-3-3L6.5 15.5z"></path></svg><span>Tools</span></div>
+      </nav>
     </div>
 
-    <div class="nav-item">
-      📌 ŚLEDZENIE
+    <div class="nav-right">
+      <button class="icon-btn" aria-label="Ulubione"><svg viewBox="0 0 24 24"><path d="M20.8 8.6c0 6.3-8.8 11.4-8.8 11.4S3.2 14.9 3.2 8.6A4.8 4.8 0 0 1 12 6a4.8 4.8 0 0 1 8.8 2.6z"></path></svg></button>
+      <button class="icon-btn" aria-label="Lista"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"></rect><line x1="9" y1="8" x2="15" y2="8"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg></button>
+      <button class="icon-btn" aria-label="Ustawienia"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.7l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.7-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.7.3l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.7 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.7l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.7.3h.1a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 1 1.5h.1a1.6 1.6 0 0 0 1.7-.3l.1-.1a2 2 0 0 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.7v.1a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.5 1z"></path></svg></button>
+    </div>
+  </header>
+
+  <aside class="catalog">
+    <div class="catalog-title"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4z"></path><path d="M3 17l9 4 9-4"></path><path d="M3 12l9 4 9-4"></path></svg>Katalog</div>
+    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M4 16l3-9h10l3 9"></path><path d="M2 16h20"></path></svg>Buty</div>
+    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l2 6H6z"></path><path d="M6 10v10h12V10"></path></svg>Bluzy</div>
+    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l2 3-3 2v11H9V9L6 7z"></path></svg>Koszulki</div>
+    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 3h8v6l-2 12h-4L8 9z"></path></svg>Spodnie</div>
+    <div class="catalog-item"><svg viewBox="0 0 24 24"><path d="M8 4h8l-1 8H9z"></path><path d="M9 12v8"></path><path d="M15 12v8"></path></svg>Spodenki</div>
+  </aside>
+
+  <main class="hero">
+    <h1>cadenreps.pl</h1>
+    <p>More than just your spreadsheet</p>
+
+    <div class="search-wrap">
+      <div class="search">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#d7dce6;fill:none;stroke-width:2"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg>
+        <input type="text" placeholder="Search...">
+      </div>
     </div>
 
-    <div class="nav-item">
-      📊 SPREADSHEET
+    <div class="hero-actions">
+      <a href="https://discord.gg/vJTNhqHSNh" target="_blank" rel="noopener noreferrer">Join the community</a>
+      <button class="browse-btn">Browse Finds →</button>
     </div>
+  </main>
 
-    <div class="nav-item">
-      📁 KATALOG
+  <section class="newest">
+    <div>
+      <div class="newest-title"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4z"></path><path d="M3 17l9 4 9-4"></path><path d="M3 12l9 4 9-4"></path></svg>Newest Finds</div>
+      <p>Latest W2C drops from trusted sellers.</p>
     </div>
-
-    <div class="nav-item">
-      ✅ QC
-    </div>
-
-    <div class="nav-item">
-      🛠 NARZĘDZIA
-    </div>
-
-  </div>
-
-  <!-- PRAWO -->
-  <div class="nav-right">
-    <div class="icon-btn">♡</div>
-    <div class="icon-btn">📋</div>
-    <div class="icon-btn">⚙</div>
-  </div>
-
-</div>
-
-<!-- HERO -->
-<div class="hero">
-
-  <h1>KDREPS</h1>
-  <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
-
-  <div class="search">
-    <input type="text" placeholder="Wyszukiwarka...">
-  </div>
-
-  <div class="discord">
-    <a href="https://discord.gg/vJTNhqHSNh" target="_blank">
-      Dołącz do społeczności
-    </a>
-  </div>
-
-</div>
-
-<!-- KATALOG -->
-<div class="catalog">
-  <h3>📚 KATALOG</h3>
-  <div>👟 BUTY</div>
-  <div>🧥 BLUZY</div>
-  <div>👕 KOSZULKI</div>
-  <div>👖 SPODNIE</div>
-  <div>🩳 SPODENKI</div>
-</div>
-
+    <a class="view-all" href="#">View all →</a>
+  </section>
 </body>
 </html>
