@@ -20,17 +20,18 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 60px;
+  font-size: 70px;
   font-weight: 900;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 15px rgba(255,255,255,0.5);
   animation: introAnim 2.5s forwards;
 }
 
 @keyframes introAnim {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
   50% { opacity: 1; }
   100% {
-    transform: translate(-50%, -200%);
+    transform: translate(-50%, -250%);
     opacity: 0;
   }
 }
@@ -41,8 +42,9 @@ body {
   top: 15px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  padding: 0 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
   opacity: 0;
   animation: showNav 1s forwards;
   animation-delay: 2.5s;
@@ -52,11 +54,13 @@ body {
   to { opacity: 1; }
 }
 
-.nav-left, .nav-right {
-  display: flex;
-  gap: 10px;
+.logo {
+  font-size: 32px;
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 
+/* BUTTONY NAV */
 .nav-btn {
   background: transparent;
   border: 1px solid #444;
@@ -65,21 +69,17 @@ body {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-/* LOGO NA GÓRZE */
-.logo-small {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 28px;
-  font-weight: 900;
-  text-shadow: 0 0 8px rgba(255,255,255,0.4);
+.nav-btn:hover {
+  border-color: white;
+  box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }
 
 /* ===== HERO ===== */
 .hero {
-  margin-top: 140px;
+  margin-top: 160px;
   text-align: center;
   opacity: 0;
   animation: fadeIn 1s forwards;
@@ -91,24 +91,26 @@ body {
 }
 
 .hero h1 {
-  font-size: 64px;
+  font-size: 70px;
   margin: 0;
 }
 
 .hero p {
   color: #aaa;
-  margin: 10px 0 30px;
+  margin: 15px 0 30px;
+  font-size: 18px;
 }
 
 /* SEARCH */
 .search input {
-  width: 400px;
+  width: 420px;
   max-width: 90%;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
   border: 1px solid #333;
   background: #111;
   color: white;
+  font-size: 14px;
 }
 
 /* BUTTONY */
@@ -118,34 +120,43 @@ body {
 
 .hero-buttons a {
   text-decoration: none;
-  margin: 0 10px;
 }
 
 .btn {
-  padding: 12px 20px;
-  border-radius: 20px;
-  border: 1px solid #444;
+  background: #111;
+  border: 1px solid #333;
   color: white;
+  padding: 12px 22px;
+  border-radius: 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.btn.primary {
+.btn:hover {
   border-color: white;
+  box-shadow: 0 0 12px rgba(255,255,255,0.4);
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 600px) {
 
   .hero h1 {
-    font-size: 36px;
+    font-size: 40px;
   }
 
-  .logo-small {
-    font-size: 20px;
+  .logo {
+    font-size: 22px;
   }
 
   .nav-btn {
     font-size: 10px;
     padding: 5px 8px;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
 }
@@ -161,25 +172,21 @@ body {
 <!-- NAVBAR -->
 <div class="navbar">
 
-  <div class="nav-left">
-    <button class="nav-btn">KALKULATOR</button>
-    <button class="nav-btn">QC</button>
-  </div>
+  <button class="nav-btn">KALKULATOR</button>
+  <button class="nav-btn">QC</button>
 
-  <div class="logo-small">KDREPS</div>
+  <div class="logo">KDREPS</div>
 
-  <div class="nav-right">
-    <button class="nav-btn">SPREADSHEET</button>
-    <button class="nav-btn">ULUBIONE</button>
-  </div>
+  <button class="nav-btn">SPREADSHEET</button>
+  <button class="nav-btn">ULUBIONE</button>
 
 </div>
 
 <!-- HERO -->
 <div class="hero">
 
-  <h1>kdreps.pl</h1>
-  <p>More than just your spreadsheet</p>
+  <h1>KDREPS.COM</h1>
+  <p>Itemy, obliczanie dostawy, qc i wiele więcej!</p>
 
   <div class="search">
     <input type="text" placeholder="Szukaj produktu...">
@@ -190,7 +197,7 @@ body {
       <button class="btn">Dołącz do społeczności</button>
     </a>
 
-    <button class="btn primary">Przeglądaj</button>
+    <button class="btn">Przeglądaj</button>
   </div>
 
 </div>
