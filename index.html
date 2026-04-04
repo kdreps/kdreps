@@ -2,56 +2,45 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KDREPS</title>
 
-<!-- GOOGLE FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-
 <style>
+
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: Arial, sans-serif;
   background: #0a0a0a;
   color: white;
 }
 
-/* INTRO */
+/* ===== INTRO LOGO ===== */
 .intro {
   position: fixed;
-  inset: 0;
-  background: #0a0a0a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  animation: fadeOut 0.8s forwards;
-  animation-delay: 2.2s;
-}
-
-.logo-big {
-  font-size: clamp(40px, 10vw, 70px); /* responsywne */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
   font-weight: 900;
   letter-spacing: 2px;
-  text-align: center;
-
-  color: #ffffff;
-
-  /* subtelny glow (premium) */
-  text-shadow:
-    0 0 5px rgba(255,255,255,0.6),
-    0 0 15px rgba(255,255,255,0.2);
-
-  animation: scaleIn 1s ease;
+  animation: introAnim 2.5s forwards;
 }
 
-/* NAVBAR */
+@keyframes introAnim {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  50% { opacity: 1; }
+  100% {
+    transform: translate(-50%, -200%);
+    opacity: 0;
+  }
+}
+
+/* ===== NAVBAR ===== */
 .navbar {
   position: fixed;
   top: 15px;
-  left: 0;
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 0 30px;
   opacity: 0;
@@ -59,187 +48,152 @@ body {
   animation-delay: 2.5s;
 }
 
-/* LEWA STRONA */
-.nav-left {
-  display: flex;
-  gap: 15px;
+@keyframes showNav {
+  to { opacity: 1; }
 }
 
-/* PRAWA STRONA */
-.nav-right {
+.nav-left, .nav-right {
   display: flex;
-  gap: 15px;
+  gap: 10px;
 }
 
-/* ŚRODEK */
+.nav-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* LOGO NA GÓRZE */
 .logo-small {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-size: 28px;
   font-weight: 900;
-  text-shadow: 0 0 8px rgba(255,255,255,0.6);
+  text-shadow: 0 0 8px rgba(255,255,255,0.4);
 }
-/* przyciski */
-.nav-btn {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 10px;
-  border: 1px solid #333;
-  border-radius: 6px;
+
+/* ===== HERO ===== */
+.hero {
+  margin-top: 140px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+  animation-delay: 2.8s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.hero h1 {
+  font-size: 64px;
+  margin: 0;
+}
+
+.hero p {
+  color: #aaa;
+  margin: 10px 0 30px;
 }
 
 /* SEARCH */
-.search {
-  margin-top: 80px;
-  padding: 0 15px;
-}
-
-.search input {
-  width: 100%;
-  max-width: 400px;
-  margin: auto;
-  display: block;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 30px;
-}
-
-.card {
-  background: #111;
-  border-radius: 14px;
-  padding: 12px;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px #222;
-}
-
-.price {
-  color: #00ff88;
-  font-weight: 700;
-}
-
-/* ANIMACJE */
-@keyframes scaleIn {
-  from { transform: scale(0.6); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
-}
-
-@keyframes showNav {
-  to { opacity: 1; }
-}
-</style>
-</head>
-
-<body>
-
-<!-- INTRO -->
-<div class="intro">
-  <div class="logo-big">KDREPS</div>
-</div>
-
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-left">
-    <div class="nav-btn">KALKULATOR</div>
-    <div class="nav-btn">QC</div>
-  </div>
-
-  <div class="logo-small">KDREPS</div>
-
-  <div class="nav-right">
-    <div class="nav-btn">SPREADSHEET</div>
-    <div class="nav-btn">ULUBIONE</div>
-  </div>
-</div>
-
-<!-- SEARCH -->
-.search {
-  margin-top: 100px;
-  display: flex;
-  justify-content: center;
-}
-
 .search input {
   width: 400px;
   max-width: 90%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
 }
 
-<!-- PRODUCTS -->
-<div class="grid" id="products"></div>
-
-<script>
-const products = [
-  { name: "AIR FORCE 1", price: 65.54 },
-  { name: "JORDAN 4", price: 300 },
-  { name: "BLUZA YEEZY GAP", price: 152.65 },
-  { name: "PERFUMY CHANEL", price: 79.17 }
-];
-
-const container = document.getElementById("products");
-const search = document.getElementById("search");
-
-function render(list) {
-  container.innerHTML = "";
-  list.forEach(p => {
-    container.innerHTML += `
-      <div class="card">
-        <p>${p.name}</p>
-        <p class="price">${p.price} zł</p>
-      </div>
-    `;
-  });
+/* BUTTONY */
+.hero-buttons {
+  margin-top: 30px;
 }
 
-search.addEventListener("input", () => {
-  const val = search.value.toLowerCase();
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(val)
-  );
-  render(filtered);
-});
+.hero-buttons a {
+  text-decoration: none;
+  margin: 0 10px;
+}
 
-render(products);
-</script>
+.btn {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  color: white;
+}
+
+.btn.primary {
+  border-color: white;
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 600px) {
 
-  .navbar {
-    padding: 0 15px;
-  }
-
-  .nav-btn {
-    font-size: 11px;
-    padding: 5px 8px;
+  .hero h1 {
+    font-size: 36px;
   }
 
   .logo-small {
     font-size: 20px;
   }
 
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    padding: 15px;
-    gap: 10px;
+  .nav-btn {
+    font-size: 10px;
+    padding: 5px 8px;
   }
 
-  .search input {
-    width: 100%;
-  }
 }
+
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro">KDREPS</div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+
+  <div class="nav-left">
+    <button class="nav-btn">KALKULATOR</button>
+    <button class="nav-btn">QC</button>
+  </div>
+
+  <div class="logo-small">KDREPS</div>
+
+  <div class="nav-right">
+    <button class="nav-btn">SPREADSHEET</button>
+    <button class="nav-btn">ULUBIONE</button>
+  </div>
+
+</div>
+
+<!-- HERO -->
+<div class="hero">
+
+  <h1>kdreps.pl</h1>
+  <p>More than just your spreadsheet</p>
+
+  <div class="search">
+    <input type="text" placeholder="Szukaj produktu...">
+  </div>
+
+  <div class="hero-buttons">
+    <a href="https://discord.gg/vJTNhqHSNh" target="_blank">
+      <button class="btn">Dołącz do społeczności</button>
+    </a>
+
+    <button class="btn primary">Przeglądaj</button>
+  </div>
+
+</div>
+
 </body>
 </html>
