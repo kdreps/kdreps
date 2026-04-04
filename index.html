@@ -78,6 +78,20 @@ products.forEach(p => {
   container.appendChild(div);
 });
 </script>
+<script src="products.js"></script>
 
+<script>
+  const container = document.getElementById("products");
+
+  products.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <p>${p.name}</p>
+        <p class="price">${p.price} zł</p>
+        <p>${p.tag}</p>
+      </div>
+    `;
+  });
+</script>
 </body>
 </html>
