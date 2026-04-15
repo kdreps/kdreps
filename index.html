@@ -1,1 +1,28 @@
-{"version":2,"public":true,"routes":[{"src":"/photos/(.*)","dest":"/api/photos/$1"}],"functions":{"api/photos.js":{"memory":"300mb","maxDuration":10},"api/photos/(.*).js":{"memory":"300mb","maxDuration":10}}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDREPS Database</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
+        h1 { color: #333; }
+        .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        a { padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        a:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 KDREPS Database</h1>
+        <p>Welcome to the KDREPS database. Choose an option below:</p>
+        <div class="links">
+            <a href="/kdreps.html">Main Database</a>
+            <a href="/sheet.html">Sheet View</a>
+            <a href="/sorter.html">Sorter</a>
+            <a href="/kakobuy_dump.html">Kakobuy Dump</a>
+        </div>
+    </div>
+</body>
+</html>
