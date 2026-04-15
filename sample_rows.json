@@ -1,0 +1,33 @@
+"""
+Parse the local XLSX file using openpyxl drawing/relationships
+to find hyperlinks stored in the workbook's internal XML
+"""
+import zipfile, json, re, os
+
+xlsx_path = r'C:\Users\igor\Downloads\KDREPS-SPREADSHEET-Kopia-arkusza-SPREEDSHEET.xlsx'
+
+# XLSX is a ZIP - open and look at all XML files inside
+with zipfile.ZipFile(xlsx_path, 'r') as z:
+    names = z.namelist()
+    print("Files in xlsx:")
+    for n in names:
+        print(' ', n)
+    
+    # The hyperlinks are in xl/worksheets/_rels/sheet1.xml.rels
+    rels_file = None
+    for n in names:
+        if 'sheet1.xml.rels' in n or 'sheet.xml.rels' in n:
+            rels_file = n
+            print(f"\nReading rels file: {n}")
+            content = z.read(n).decode('utf-8')
+            print(content[:3000])
+            
+    # Also check worksheets/sheet1.xml for hyperlinks section
+    for n in names:
+        if 'sheet1.xml' in n and 'rels' not in n:
+            content = z.read(n).decode('utf-8')
+            # Find hyperlinks section
+            hyp_match = re.findall(r'<hyperlink[^>]+>', content)
+            print(f"\nHyperlinks in {n}:")
+            for h in hyp_match[:20]:
+                print(h)

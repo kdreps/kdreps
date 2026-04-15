@@ -1,0 +1,2873 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KDREPS</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #181818;
+      --border: #252525;
+      --border2: #333333;
+      --accent: #c8f542;
+      --accent2: #8fff00;
+      --text: #e8e8e8;
+      --text2: #888888;
+      --text3: #555555;
+      --red: #ff4444;
+      --orange: #ff8c00;
+      --blue: #4488ff;
+      --card: #141414;
+      --radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .logo-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(0.7);
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 15px;
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      transition: all 0.3s;
+      transform-origin: center;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      flex-direction: column;
+      padding: 8px 0;
+      transform: translateY(-110%);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 14px 28px;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .mobile-menu a:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+      background: rgba(200, 245, 66, 0.04);
+    }
+
+    /* PAGE SYSTEM */
+    .page {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* HOME */
+    .home-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 32px 60px;
+      text-align: center;
+      gap: 48px;
+    }
+
+    .home-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(80px, 14vw, 160px);
+      letter-spacing: 6px;
+      line-height: 0.88;
+      color: var(--text);
+    }
+
+    .home-title em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    /* SEARCH */
+    .search-wrap {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+    }
+
+    .search-box {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 245, 66, 0.07);
+    }
+
+    .search-icon {
+      padding: 0 18px;
+      color: var(--text3);
+      font-size: 17px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .search-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      padding: 16px 0;
+    }
+
+    .search-input::placeholder {
+      color: var(--text3);
+    }
+
+    .search-btn {
+      padding: 10px 20px;
+      margin: 6px;
+      background: var(--accent);
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .search-btn:hover {
+      background: var(--accent2);
+    }
+
+    .search-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+
+    .search-results {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      overflow: hidden;
+      display: none;
+      max-height: 440px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border2) transparent;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-results.visible {
+      display: block;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-item:hover {
+      background: rgba(200, 245, 66, 0.06);
+    }
+
+    .sri-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .sri-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 4px;
+    }
+
+    .sri-thumb-emoji {
+      font-size: 22px;
+    }
+
+    .sri-text {
+      flex: 1;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .sri-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sri-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: 2px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .sri-price {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .sri-cat {
+      opacity: 0.6;
+    }
+
+    .sri-arrow {
+      color: var(--text3);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .search-section-header {
+      padding: 8px 16px 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text3);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .search-result-count {
+      padding: 8px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      text-align: center;
+      letter-spacing: 1px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* NAV PILLS */
+    .nav-pills {
+      display: flex;
+      gap: 10px;
+      padding: 4px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 850px;
+      justify-content: flex-start;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .nav-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      white-space: nowrap;
+      user-select: none;
+      text-transform: none;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-pill.active {
+      background: var(--text);
+      color: #000;
+      border-color: var(--text);
+    }
+
+    .nav-pill:not(.active):hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--text3);
+    }
+
+    .nav-pill-icon {
+      display: none;
+    }
+
+    /* SUBPAGE SHELL */
+    .subpage-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 32px 60px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 32px;
+    }
+
+    .back-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .subpage-header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .subpage-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .subpage-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    /* SHARED */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text2);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .form-input,
+    .form-select {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 12px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--accent);
+    }
+
+    .form-select option {
+      background: var(--bg2);
+    }
+
+    /* KALKULATOR */
+    .calc-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .calc-header {
+      background: var(--bg3);
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .calc-hdr-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    .calc-hdr-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+
+    .calc-body {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .col-full {
+      grid-column: 1/-1;
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .calc-btn:hover {
+      background: var(--accent2);
+      transform: translateY(-1px);
+    }
+
+    .calc-result {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .result-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .result-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    .result-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .result-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .result-line strong {
+      color: var(--text);
+    }
+
+    /* PROMO */
+    .promo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .promo-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .promo-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .promo-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .promo-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .promo-badge.active {
+      background: rgba(200, 245, 66, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(200, 245, 66, 0.2);
+    }
+
+    .promo-badge.soon {
+      background: rgba(255, 140, 0, 0.1);
+      color: var(--orange);
+      border: 1px solid rgba(255, 140, 0, 0.2);
+    }
+
+    .promo-badge.expired {
+      background: rgba(255, 68, 68, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+    }
+
+    .promo-discount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--accent);
+    }
+
+    .promo-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .promo-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .promo-code-row {
+      display: flex;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .promo-code {
+      flex: 1;
+      padding: 10px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 3px;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .copy-btn {
+      padding: 10px 14px;
+      background: var(--border2);
+      border: none;
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .promo-expiry {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    /* SHEETS */
+    .sheets-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .sheet-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      aspect-ratio: 1;
+    }
+
+    .sheet-item:hover {
+      border-color: var(--accent);
+      background: rgba(200, 245, 66, 0.03);
+      transform: translateY(-4px);
+    }
+
+    .sheet-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(200, 245, 66, 0.08);
+      border: 1px solid rgba(200, 245, 66, 0.15);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .sheet-item:hover .sheet-icon {
+      transform: scale(1.08);
+    }
+
+    .sheet-info {
+      flex: none;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sheet-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .sheet-meta {
+      display: none;
+    }
+
+    .sheet-tag {
+      display: none;
+    }
+
+    .sheet-arrow {
+      display: none;
+    }
+
+    /* LINKS */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .ext-link {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .ext-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      transform: scaleY(0);
+      transition: transform 0.2s;
+      transform-origin: bottom;
+    }
+
+    .ext-link:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .ext-link:hover::before {
+      transform: scaleY(1);
+    }
+
+    .ext-domain {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+
+    .ext-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .ext-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .ext-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      align-self: flex-start;
+    }
+
+    .ext-tag.tracking {
+      background: rgba(255, 140, 0, 0.1);
+      color: var(--orange);
+      border: 1px solid rgba(255, 140, 0, 0.15);
+    }
+
+    .ext-tag.pricing {
+      background: rgba(200, 245, 66, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(200, 245, 66, 0.15);
+    }
+
+    .ext-tag.market {
+      background: rgba(68, 136, 255, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(68, 136, 255, 0.15);
+    }
+
+    .ext-tag.tool {
+      background: rgba(255, 68, 68, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(255, 68, 68, 0.15);
+    }
+
+    /* KONTAKT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .contact-card-icon {
+      font-size: 26px;
+    }
+
+    .contact-card-label {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .contact-card-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .contact-card-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    .contact-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-form-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg3);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      z-index: 9998;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 4px;
+      color: var(--text3);
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    /* PRODUCT CARD LIST */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(200, 245, 66, 0.08);
+    }
+
+    .product-img-wrap {
+      width: 100%;
+      height: 190px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 16px;
+      transition: transform 0.35s ease;
+    }
+
+    .no-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+    }
+
+    .product-card:hover .product-img-wrap img {
+      transform: scale(1.07);
+    }
+
+    .product-info {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .product-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .pln {
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .cny {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .product-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag-batch {
+      background: rgba(200, 245, 66, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(200, 245, 66, 0.25);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
+
+    .product-card-arrow {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(200, 245, 66, 0.3);
+      color: var(--accent);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .product-card:hover .product-card-arrow {
+      opacity: 1;
+    }
+
+    /* PRODUCT DETAIL PAGE */
+    .pd-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 32px 80px;
+    }
+
+    .pd-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 48px;
+      text-transform: uppercase;
+    }
+
+    .pd-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .pd-img-side {
+      position: sticky;
+      top: 100px;
+    }
+
+    .pd-img-frame {
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5);
+    }
+
+    .pd-img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 32px;
+    }
+
+    .pd-img-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 100px;
+      background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+      border-radius: 24px;
+    }
+
+    .pd-info-side {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .pd-cat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .pd-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.05;
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+
+    .pd-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    .pd-prices-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .pd-price-pln {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .pd-price-cny {
+      font-family: 'DM Mono', monospace;
+      font-size: 16px;
+      color: var(--text3);
+    }
+
+    .pd-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pd-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--text2);
+    }
+
+    .pd-badge span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .pd-buy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 32px;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 3px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+
+    .pd-buy-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(200, 245, 66, 0.35);
+      filter: brightness(1.1);
+    }
+
+    .pd-buy-btn:active {
+      transform: translateY(0);
+    }
+
+    .pd-no-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 32px;
+      background: var(--card);
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .pd-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      .pd-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .pd-img-side {
+        position: relative;
+        top: auto;
+      }
+
+      .pd-wrap {
+        padding: 80px 20px 60px;
+      }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: flex;
+      }
+
+      .home-wrap {
+        padding: 80px 20px 50px;
+        gap: 36px;
+      }
+
+      .subpage-wrap {
+        padding: 80px 20px 50px;
+      }
+
+      .calc-body {
+        grid-template-columns: 1fr;
+      }
+
+      .weight-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .promo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sheet-tag {
+        display: none;
+      }
+
+      .calc-result {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .result-breakdown {
+        align-items: flex-start;
+      }
+
+      .footer {
+        padding: 24px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .home-title {
+        font-size: 72px;
+      }
+
+      .weight-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-pill {
+        padding: 9px 14px;
+        font-size: 11px;
+      }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .if-focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(200,245,66,0.07); }
+  </style>
+</head>
+
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo" onclick="goHome()">
+      <div class="logo-dot"></div>KDREPS
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a onclick="goTo('kalkulator')">Kalkulator</a></li>
+        <li><a onclick="goTo('promo')">Kod Promocyjny</a></li>
+        <li><a onclick="goTo('item-finder')">Item Finder</a></li>
+        <li><a onclick="goTo('sheets')">Itemki</a></li>
+        <li><a onclick="goTo('linki')">Linki</a></li>
+        <li><a onclick="goTo('kontakt')">Kontakt</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a onclick="goTo('kalkulator');closeMenu()">📦 Kalkulator</a>
+    <a onclick="goTo('promo');closeMenu()">🏷️ Kod Promocyjny</a>
+    <a onclick="goTo('item-finder');closeMenu()">🔍 Item Finder</a>
+    <a onclick="goTo('sheets');closeMenu()">📦 Itemki</a>
+    <a onclick="goTo('linki');closeMenu()">🔗 Linki</a>
+    <a onclick="goTo('kontakt');closeMenu()">✉️ Kontakt</a>
+  </div>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="home-wrap">
+      <div class="home-title">KD<em>REPS</em></div>
+
+      <div class="search-wrap">
+        <div class="search-box">
+          <div class="search-icon">🔍</div>
+          <input class="search-input" id="searchInput" type="text" placeholder="Szukaj produktów..." autocomplete="off"
+            oninput="handleSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
+          <button class="search-btn" onclick="doSearch()">SZUKAJ</button>
+        </div>
+        <div class="search-hint">np. Air Force, Corteiz, Bape, Nike, bluza, spodenki...</div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+
+      <div class="nav-pills">
+        <div class="nav-pill active" onclick="goHome()">Wszystko</div>
+        <div class="nav-pill" onclick="goTo('koszulki-bluzy')">Koszulki i bluzy</div>
+        <div class="nav-pill" onclick="goTo('buty')">Buty</div>
+        <div class="nav-pill" onclick="goTo('spodnie')">Spodnie</div>
+        <div class="nav-pill" onclick="goTo('spodenki')">Spodenki</div>
+        <div class="nav-pill" onclick="goTo('kurtki')">Kurtki</div>
+        <div class="nav-pill" onclick="goTo('czapki')">Czapki</div>
+        <div class="nav-pill" onclick="goTo('koszulki-pilkarskie')">Koszulki piłkarskie</div>
+        <div class="nav-pill" onclick="goTo('sety')">Sety</div>
+        <div class="nav-pill" onclick="goTo('skarpetki')">Skarpetki</div>
+        <div class="nav-pill" onclick="goTo('majtki')">Majtki</div>
+        <div class="nav-pill" onclick="goTo('paski')">Paski</div>
+        <div class="nav-pill" onclick="goTo('portfele')">Portfele</div>
+        <div class="nav-pill" onclick="goTo('plecaki')">Plecaki</div>
+        <div class="nav-pill" onclick="goTo('perfumy')">Perfumy</div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-logo">KDREPS</div>
+      <div class="footer-links">
+        <a>Regulamin</a>
+        <a>Polityka prywatności</a>
+        <a onclick="goTo('kontakt')">Kontakt</a>
+      </div>
+      <div class="footer-copy">© 2025 kdreps</div>
+    </footer>
+  </div>
+
+  <!-- KALKULATOR -->
+  <div class="page" id="page-kalkulator">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">01</span>
+        <h1 class="subpage-title">KALKULATOR PRZESYŁKI</h1>
+      </div>
+      <div class="calc-container">
+        <div class="calc-header">
+          <div>
+            <div class="calc-hdr-title">WYCENA PRZESYŁKI</div>
+            <div class="calc-hdr-sub">Wypełnij formularz i oblicz szacowany koszt</div>
+          </div>
+          <span style="font-size:32px">📦</span>
+        </div>
+        <div class="calc-body">
+          <div class="form-group">
+            <label class="form-label">Skąd</label>
+            <select class="form-select" id="from">
+              <option value="pl">🇵🇱 Polska</option>
+              <option value="de">🇩🇪 Niemcy</option>
+              <option value="uk">🇬🇧 Wielka Brytania</option>
+              <option value="us">🇺🇸 USA</option>
+              <option value="cn">🇨🇳 Chiny</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dokąd</label>
+            <select class="form-select" id="to">
+              <option value="pl">🇵🇱 Polska</option>
+              <option value="de">🇩🇪 Niemcy</option>
+              <option value="uk">🇬🇧 Wielka Brytania</option>
+              <option value="us">🇺🇸 USA</option>
+              <option value="cn">🇨🇳 Chiny</option>
+            </select>
+          </div>
+          <div class="form-group col-full">
+            <label class="form-label">Waga i wymiary</label>
+            <div class="weight-row">
+              <div class="form-group" style="gap:6px">
+                <label class="form-label" style="font-size:10px">Waga (kg)</label>
+                <input class="form-input" type="number" id="weight" placeholder="1" min="0.1" step="0.1" value="1">
+              </div>
+              <div class="form-group" style="gap:6px">
+                <label class="form-label" style="font-size:10px">Dł × Szer (cm)</label>
+                <input class="form-input" type="text" id="dimensions" placeholder="30×20" value="30×20">
+              </div>
+              <div class="form-group" style="gap:6px">
+                <label class="form-label" style="font-size:10px">Wysokość (cm)</label>
+                <input class="form-input" type="number" id="calcHeight" placeholder="15" value="15">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rodzaj przesyłki</label>
+            <select class="form-select" id="type">
+              <option value="std">Standardowa</option>
+              <option value="exp">Ekspresowa</option>
+              <option value="eco">Ekonomiczna</option>
+              <option value="pal">Paleta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ubezpieczenie</label>
+            <select class="form-select" id="insurance">
+              <option value="0">Brak</option>
+              <option value="10">Do 500 zł (+10 zł)</option>
+              <option value="25">Do 2000 zł (+25 zł)</option>
+              <option value="50">Do 5000 zł (+50 zł)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kod promocyjny</label>
+            <input class="form-input" type="text" id="promoInput" placeholder="Wpisz kod...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pobranie (COD)</label>
+            <select class="form-select" id="cod">
+              <option value="0">Nie</option>
+              <option value="5">Tak (+5 zł)</option>
+            </select>
+          </div>
+          <button class="calc-btn col-full" onclick="calculate()">⚡ OBLICZ KOSZT PRZESYŁKI</button>
+          <div class="col-full">
+            <div class="calc-result" id="calcResult">
+              <div>
+                <div class="result-label">SZACOWANY KOSZT</div>
+                <div class="result-price" id="resultPrice">— zł</div>
+              </div>
+              <div class="result-breakdown" id="resultBreakdown">
+                <div class="result-line">Wypełnij formularz i oblicz</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO -->
+  <div class="page" id="page-promo">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">02</span>
+        <h1 class="subpage-title">KODY PROMOCYJNE</h1>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;min-height:300px;">
+        <div
+          style="text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:13px;letter-spacing:2px;">
+          <div style="font-size:48px;margin-bottom:20px;">🏷️</div>
+          <div>BRAK KODÓW PROMOCYJNYCH</div>
+          <div style="margin-top:8px;font-size:11px;opacity:0.6;">Wróć tu później</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHEETS -->
+  <div class="page" id="page-sheets">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">03</span>
+        <h1 class="subpage-title">SPREADSHEETS</h1>
+      </div>
+      <div class="sheets-list">
+        <div class="sheet-item" onclick="goTo('koszulki-bluzy')">
+          <div class="sheet-icon">👕</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Koszulki i bluzy</div>
+            <div class="sheet-meta">Kategoria odzieżowa</div>
+          </div><span class="sheet-tag">ODZIEŻ</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('koszulki-pilkarskie')">
+          <div class="sheet-icon">⚽</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Koszulki piłkarskie</div>
+            <div class="sheet-meta">Kategoria sportowa</div>
+          </div><span class="sheet-tag">SPORT</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('spodenki')">
+          <div class="sheet-icon">🩳</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Spodenki</div>
+            <div class="sheet-meta">Kategoria odzieżowa</div>
+          </div><span class="sheet-tag">ODZIEŻ</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('spodnie')">
+          <div class="sheet-icon">👖</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Spodnie</div>
+            <div class="sheet-meta">Kategoria odzieżowa</div>
+          </div><span class="sheet-tag">ODZIEŻ</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('buty')">
+          <div class="sheet-icon">👟</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Buty</div>
+            <div class="sheet-meta">Kategoria obuwia</div>
+          </div><span class="sheet-tag">OBUWIE</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('sety')">
+          <div class="sheet-icon">👔</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Sety</div>
+            <div class="sheet-meta">Kategoria odzieżowa</div>
+          </div><span class="sheet-tag">ODZIEŻ</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('skarpetki')">
+          <div class="sheet-icon">🧦</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Skarpetki</div>
+            <div class="sheet-meta">Kategoria bielizny</div>
+          </div><span class="sheet-tag">BIELIZNA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('majtki')">
+          <div class="sheet-icon">🩲</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Majtki</div>
+            <div class="sheet-meta">Kategoria bielizny</div>
+          </div><span class="sheet-tag">BIELIZNA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('paski')">
+          <div class="sheet-icon">🥋</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Paski</div>
+            <div class="sheet-meta">Kategoria akcesoriów</div>
+          </div><span class="sheet-tag">AKCESORIA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('portfele')">
+          <div class="sheet-icon">👛</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Portfele</div>
+            <div class="sheet-meta">Kategoria akcesoriów</div>
+          </div><span class="sheet-tag">AKCESORIA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('plecaki')">
+          <div class="sheet-icon">🎒</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Plecaki</div>
+            <div class="sheet-meta">Kategoria akcesoriów</div>
+          </div><span class="sheet-tag">AKCESORIA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('czapki')">
+          <div class="sheet-icon">🧢</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Czapki</div>
+            <div class="sheet-meta">Kategoria akcesoriów</div>
+          </div><span class="sheet-tag">AKCESORIA</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('kurtki')">
+          <div class="sheet-icon">🧥</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Kurtki</div>
+            <div class="sheet-meta">Kategoria odzieżowa</div>
+          </div><span class="sheet-tag">ODZIEŻ</span><span class="sheet-arrow">→</span>
+        </div>
+        <div class="sheet-item" onclick="goTo('perfumy')">
+          <div class="sheet-icon">💧</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Perfumy</div>
+            <div class="sheet-meta">Kategoria kosmetyków</div>
+          </div><span class="sheet-tag">KOSMETYKI</span><span class="sheet-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBPAGES KATEGORII -->
+  <div class="page" id="page-koszulki-bluzy">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Koszulki / Bluzy</h2>
+      <div class="product-grid" id="grid-koszulki-bluzy"></div>
+    </div>
+  </div>
+  <div class="page" id="page-koszulki-pilkarskie">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Koszulki Piłkarskie</h2>
+      <div class="product-grid" id="grid-koszulki-pilkarskie"></div>
+    </div>
+  </div>
+  <div class="page" id="page-spodenki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Spodenki</h2>
+      <div class="product-grid" id="grid-spodenki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-spodnie">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Spodnie</h2>
+      <div class="product-grid" id="grid-spodnie"></div>
+    </div>
+  </div>
+  <div class="page" id="page-buty">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Buty</h2>
+      <div class="product-grid" id="grid-buty"></div>
+    </div>
+  </div>
+  <div class="page" id="page-sety">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Sety</h2>
+      <div class="product-grid" id="grid-sety"></div>
+    </div>
+  </div>
+  <div class="page" id="page-skarpetki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Skarpetki</h2>
+      <div class="product-grid" id="grid-skarpetki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-majtki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Majtki</h2>
+      <div class="product-grid" id="grid-majtki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-paski">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Paski</h2>
+      <div class="product-grid" id="grid-paski"></div>
+    </div>
+  </div>
+  <div class="page" id="page-portfele">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Portfele</h2>
+      <div class="product-grid" id="grid-portfele"></div>
+    </div>
+  </div>
+  <div class="page" id="page-plecaki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Plecaki</h2>
+      <div class="product-grid" id="grid-plecaki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-czapki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Czapki</h2>
+      <div class="product-grid" id="grid-czapki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-kurtki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Kurtki</h2>
+      <div class="product-grid" id="grid-kurtki"></div>
+    </div>
+  </div>
+  <div class="page" id="page-perfumy">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">&#8592; Wróć</button>
+      <h2>Perfumy</h2>
+      <div class="product-grid" id="grid-perfumy"></div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL PAGE -->
+  <div class="page" id="page-product">
+    <div class="pd-wrap">
+      <button class="pd-back" id="pd-back-btn" onclick="closePD()">&#8592; WRÓĆ DO KATEGORII</button>
+      <div class="pd-grid">
+        <div class="pd-img-side">
+          <div class="pd-img-frame" id="pd-img-frame">
+            <div class="pd-img-placeholder">👟</div>
+          </div>
+        </div>
+        <div class="pd-info-side">
+          <div class="pd-cat-label" id="pd-category">KATEGORIA</div>
+          <h1 class="pd-name" id="pd-name">NAZWA PRODUKTU</h1>
+          <div class="pd-divider"></div>
+          <div class="pd-prices-row">
+            <div class="pd-price-pln" id="pd-price-pln">— zł</div>
+            <div class="pd-price-cny" id="pd-price-cny">¥ —</div>
+          </div>
+          <div class="pd-badges" id="pd-badges"></div>
+          <div class="pd-divider"></div>
+          <div id="pd-buy-area"></div>
+          <p class="pd-note">Link do zakupu otworzy się w nowej karcie</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-linki">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">04</span>
+        <h1 class="subpage-title">DODATKOWE LINKI</h1>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;min-height:300px;">
+        <div
+          style="text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:13px;letter-spacing:2px;">
+          <div style="font-size:48px;margin-bottom:20px;">🔗</div>
+          <div>BRAK DODATKOWYCH LINKÓW</div>
+          <div style="margin-top:8px;font-size:11px;opacity:0.6;">Wróć tu później</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KONTAKT -->
+  <div class="page" id="page-kontakt">
+    <div class="subpage-wrap">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">05</span>
+        <h1 class="subpage-title">KONTAKT</h1>
+      </div>
+      <div
+        style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:32px;text-align:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+          <div
+            style="width:96px;height:96px;background:linear-gradient(135deg,#5865F2,#7289da);border-radius:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(88,101,242,0.4);font-size:48px;">
+            💬</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--text);">DOŁĄCZ
+            DO NAS</div>
+          <div
+            style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text3);letter-spacing:1px;max-width:380px;line-height:1.7;">
+            Cały kontakt prowadzimy przez Discord. Zadaj pytanie, śledź nowości i bądź na bieżąco z naszymi ofertami.
+          </div>
+        </div>
+        <a href="https://discord.gg/UJ6ZP8fw" target="_blank" id="discord-btn"
+          style="display:inline-flex;align-items:center;gap:16px;background:linear-gradient(135deg,#5865F2,#7289da);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;padding:18px 40px;border-radius:14px;text-decoration:none;transition:all 0.25s;box-shadow:0 8px 32px rgba(88,101,242,0.35);"
+          onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 60px rgba(88,101,242,0.5)'"
+          onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(88,101,242,0.35)'">
+          <svg width="28" height="22" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0)">
+              <path
+                d="M60.1 4.9A58.6 58.6 0 0045.7.9c-.6 1.2-1.3 2.8-1.8 4A54.2 54.2 0 0027 4.9C26.5 3.7 25.8 2 25.1.9A58.9 58.9 0 0010.7 4.9C1.5 18.7-1 32.2.3 45.5a59 59 0 0018 9.1 43.2 43.2 0 003.7-6 38.4 38.4 0 01-5.8-2.8l1.4-1.1a42.1 42.1 0 0036.2 0l1.4 1.1a38.9 38.9 0 01-5.9 2.8 43 43 0 003.7 6 58.7 58.7 0 0018.1-9.1C72.6 30.3 68.9 17 60.1 4.9zM23.7 37.7c-3.3 0-6-3-6-6.8s2.6-6.8 6-6.8c3.3 0 6 3 6 6.8s-2.7 6.8-6 6.8zm22.5 0c-3.3 0-6-3-6-6.8s2.6-6.8 6-6.8c3.3 0 6 3 6 6.8s-2.7 6.8-6 6.8z"
+                fill="#ffffff" />
+            </g>
+            <defs>
+              <clipPath id="clip0">
+                <rect width="71" height="55" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          DOŁĄCZ NA DISCORD
+        </a>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:1px;opacity:0.6;">
+          discord.gg/UJ6ZP8fw</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEM FINDER -->
+  <div class="page" id="page-item-finder">
+    <div class="subpage-wrap" style="max-width:1100px;">
+      <button class="back-btn" onclick="goHome()">← Powrót</button>
+      <div class="subpage-header">
+        <span class="subpage-label">06</span>
+        <h1 class="subpage-title">ITEM FINDER</h1>
+      </div>
+
+      <!-- INPUT PANEL -->
+      <div id="if-input-panel" style="background:linear-gradient(145deg, var(--card), var(--bg2));border:1px solid var(--border);border-radius:16px;padding:40px;margin-bottom:24px;box-shadow:0 12px 32px rgba(0,0,0,0.4);position:relative;overflow:hidden;">
+        <!-- Top aesthetic decoration -->
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--accent), var(--blue), var(--accent2));opacity:0.8;"></div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+            <div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--text);margin-bottom:4px;text-shadow: 0 2px 10px rgba(200,245,66,0.2);">WKLEJ LINK DO PRODUKTU <span style="color:var(--accent)">✨ KAKOBUY AI</span></div>
+                <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:1px;">Obsługuje: Taobao · Weidian · 1688 · Kakobuy · Pandabuy · CNFans i inne agenty</div>
+            </div>
+            <!-- API Status Indicator -->
+            <div id="api-status-badge" style="font-family:'DM Mono',monospace;font-size:10px;padding:6px 14px;border-radius:20px;background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3);display:flex;align-items:center;gap:6px;transition:all 0.3s;font-weight:600;letter-spacing:1px;">
+                <div id="api-status-dot" style="width:6px;height:6px;border-radius:50%;background:var(--red);"></div>
+                <span id="api-status-text">SCRAPER API: OFFLINE</span>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div id="if-input-box" style="flex:1;min-width:240px;display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;overflow:hidden;transition:border-color 0.3s, box-shadow 0.3s;">
+            <span style="padding:0 18px;font-size:18px;flex-shrink:0;line-height:1;opacity:0.8">🔗</span>
+            <input id="if-url-input" type="text" placeholder="https://weidian.com/item.html?itemId=..." autocomplete="off"
+              style="flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;padding:18px 0;"
+              oninput="ifUpdateDetect(this.value)"
+              onkeydown="if(event.key==='Enter')ifFetch()">
+            <button onclick="document.getElementById('if-url-input').value='';ifUpdateDetect('');" style="padding:0 18px;height:100%;background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;transition:color 0.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">✕</button>
+          </div>
+          <button id="if-fetch-btn" onclick="ifFetch()" style="padding:18px 40px;background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;border:none;border-radius:14px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 15px rgba(200,245,66,0.3);">SKANUJ</button>
+        </div>
+
+        <div id="if-detect-label" style="margin-top:16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);min-height:18px;"></div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div id="if-loading" style="display:none;text-align:center;padding:80px 20px;background:var(--card);border:1px dashed var(--border2);border-radius:16px;margin-bottom:24px;">
+        <div id="if-spinner" style="width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px;box-shadow: 0 0 15px rgba(200,245,66,0.4);"></div>
+        <div id="if-loading-msg" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);letter-spacing:3px;font-weight:500;">POBIERAM IDEALNE DANE Z KAKOBUY...</div>
+      </div>
+
+      <!-- SAVED ITEMS -->
+      <div id="if-saved-section" style="display:none;margin-top:40px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--text);">ZAPISANE ITEMY <span style="background:var(--bg3);color:var(--accent);padding:2px 8px;border-radius:8px;font-size:20px;margin-left:8px;" id="if-saved-count">0</span></div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:4px;">Twoja aktualna sesja — eksportuj żeby zachować na stałe</div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button onclick="ifExportJS()" style="padding:10px 20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all 0.2s;letter-spacing:1px;" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)';this.style.background='rgba(200,245,66,0.05)'" onmouseout="this.style.color='var(--text2)';this.style.borderColor='var(--border2)';this.style.background='var(--bg3)'">📥 EKSPORT</button>
+            <button onclick="ifClearSaved()" style="padding:10px 20px;background:var(--bg3);border:1px solid rgba(255,68,68,0.3);color:var(--red);font-family:'DM Mono',monospace;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;letter-spacing:1px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,68,68,0.1)'" onmouseout="this.style.background='var(--bg3)'">🗑 WYCZYŚĆ</button>
+          </div>
+        </div>
+        <div class="product-grid" id="if-saved-grid"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NEW: ITEM RESULT PAGE -->
+  <div class="page" id="page-item-result">
+    <div class="subpage-wrap" style="max-width:1100px;">
+      <button class="back-btn" onclick="goTo('item-finder')">← Wróć do wyszukiwarki</button>
+      <div id="if-result-content"></div>
+    </div>
+  </div>
+
+  <!-- EXPORT MODAL -->
+  <div id="if-export-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9997;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--bg2);border:1px solid var(--accent);border-radius:16px;padding:28px;max-width:680px;width:100%;max-height:82vh;display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);">EKSPORT DO baza.js</div>
+        <button onclick="document.getElementById('if-export-modal').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;">✕</button>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.7;">Skopiuj kod i wklej go na dole tablicy w <code style="color:var(--accent)">baza.js</code> — przed ostatnim <code style="color:var(--accent)">];</code></div>
+      <textarea id="if-export-text" readonly style="flex:1;min-height:280px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;padding:16px;resize:none;outline:none;"></textarea>
+      <button onclick="ifCopyExport()" style="padding:14px;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:8px;cursor:pointer;">📋 KOPIUJ DO SCHOWKA</button>
+    </div>
+  </div>
+
+  <script src="baza.js?v=20260406_2"></script>
+  <script>
+    let _lastCatPage = 'buty';
+
+    function renderProducts() {
+      if (typeof KAKOBUY_DB === 'undefined') return;
+
+      const grids = {};
+      document.querySelectorAll('.product-grid[id^="grid-"]').forEach(grid => {
+        let cat = grid.id.replace('grid-', '');
+        grids[cat] = grid;
+        grid.innerHTML = '';
+      });
+
+      KAKOBUY_DB.forEach((item, idx) => {
+        let cat = item.category;
+        if (!grids[cat]) return;
+
+        let imgHTML = item.image
+          ? `<img src="${item.image}" alt="${item.name}" loading="lazy">`
+          : `<div class="no-img-placeholder">🛍️</div>`;
+
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.setAttribute('onclick', `openProduct(${idx}, '${cat}')`);
+
+        card.innerHTML = `
+            <div class="product-img-wrap">${imgHTML}</div>
+            <div class="product-card-arrow">→</div>
+            <div class="product-info">
+                <div class="product-title">${item.name}</div>
+                <div class="product-price">
+                    <span class="pln">${item.pricePLN ? item.pricePLN + ' zł' : '—'}</span>
+                    <span class="cny">${item.priceCNY ? '¥' + item.priceCNY : ''}</span>
+                </div>
+                <div class="product-tags">
+                    ${item.quality ? `<span class="tag-batch">${item.quality}</span>` : ''}
+                </div>
+            </div>
+        `;
+        grids[cat].appendChild(card);
+      });
+    }
+
+    function openProduct(idx, fromCat) {
+      const item = KAKOBUY_DB[idx];
+      if (!item) return;
+      _lastCatPage = fromCat || item.category;
+
+      // Category label
+      const catNames = {
+        'buty': 'OBUWIE', 'koszulki-bluzy': 'ODZIEŻ', 'koszulki-pilkarskie': 'SPORT',
+        'spodenki': 'ODZIEŻ', 'spodnie': 'ODZIEŻ', 'sety': 'ODZIEŻ', 'skarpetki': 'AKCESORIA',
+        'majtki': 'BIELIZNA', 'paski': 'AKCESORIA', 'portfele': 'AKCESORIA',
+        'plecaki': 'AKCESORIA', 'czapki': 'AKCESORIA', 'kurtki': 'ODZIEŻ', 'perfumy': 'KOSMETYKI'
+      };
+      document.getElementById('pd-category').textContent = catNames[item.category] || item.category.toUpperCase();
+
+      // Name
+      document.getElementById('pd-name').textContent = item.name;
+
+      // Prices
+      document.getElementById('pd-price-pln').textContent = item.pricePLN ? item.pricePLN + ' zł' : '—';
+      document.getElementById('pd-price-cny').textContent = item.priceCNY ? '¥ ' + item.priceCNY : '';
+
+      // Image
+      const frame = document.getElementById('pd-img-frame');
+      if (item.image) {
+        frame.innerHTML = `<img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;padding:32px;">`;
+      } else {
+        const icons = { 'buty': '👟', 'koszulki-bluzy': '👕', 'koszulki-pilkarskie': '⚽', 'spodenki': '🩳', 'spodnie': '👖', 'sety': '👔', 'skarpetki': '🧦', 'majtki': '🩲', 'paski': '🥋', 'portfele': '👛', 'plecaki': '🎒', 'czapki': '🧢', 'kurtki': '🧥', 'perfumy': '💧' };
+        frame.innerHTML = `<div class="pd-img-placeholder">${icons[item.category] || '🛍️'}</div>`;
+      }
+
+      // Badges
+      const badges = document.getElementById('pd-badges');
+      badges.innerHTML = '';
+      if (item.quality) badges.innerHTML += `<div class="pd-badge">JAKOŚĆ: <span>${item.quality}</span></div>`;
+      if (item.priceCNY) badges.innerHTML += `<div class="pd-badge">CENA CNY: <span>¥${item.priceCNY}</span></div>`;
+
+      // Buy button
+      const buyArea = document.getElementById('pd-buy-area');
+      if (item.link && item.link !== '#') {
+        buyArea.innerHTML = `<a href="${item.link}" target="_blank" class="pd-buy-btn">🛒 KUP TERAZ</a>`;
+      } else {
+        buyArea.innerHTML = `<div class="pd-no-link">🔗 Link niedostępny – dodaj go w baza.js</div>`;
+      }
+
+      // Navigate
+      goTo('product');
+    }
+
+    function closePD() {
+      goTo(_lastCatPage);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => { renderProducts(); checkApiStatus(); });
+
+    /* NAVIGATION */
+    function goTo(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      window.scrollTo(0, 0);
+      if (name === 'item-finder') checkApiStatus();
+    }
+    function goHome() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-home').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    /* HAMBURGER */
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('mobileMenu').classList.remove('open');
+    }
+
+    /* SEARCH - INTELLIGENT PRODUCT SEARCH */
+    const CAT_NAMES = {
+      'buty': 'Buty', 'koszulki-bluzy': 'Koszulki & Bluzy', 'koszulki-pilkarskie': 'Koszulki Piłkarskie',
+      'spodenki': 'Spodenki', 'spodnie': 'Spodnie', 'sety': 'Sety', 'skarpetki': 'Skarpetki',
+      'majtki': 'Majtki', 'paski': 'Paski', 'portfele': 'Portfele',
+      'plecaki': 'Plecaki', 'czapki': 'Czapki', 'kurtki': 'Kurtki', 'perfumy': 'Perfumy'
+    };
+    const CAT_ICONS = {
+      'buty': '👟', 'koszulki-bluzy': '👕', 'koszulki-pilkarskie': '⚽', 'spodenki': '🩳',
+      'spodnie': '👖', 'sety': '👔', 'skarpetki': '🧦', 'majtki': '🩲', 'paski': '🥋',
+      'portfele': '👛', 'plecaki': '🎒', 'czapki': '🧢', 'kurtki': '🧥', 'perfumy': '💧'
+    };
+
+    const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    function scoreProduct(item, nq, words) {
+      const n = norm(item.name);
+      const cat = norm(CAT_NAMES[item.category] || item.category);
+      let score = 0;
+      // Exact match gets highest score
+      if (n === nq) score += 100;
+      // Starts with query
+      if (n.startsWith(nq)) score += 50;
+      // Contains full query as substring
+      if (n.includes(nq)) score += 30;
+      // Category match
+      if (cat.includes(nq)) score += 20;
+      // Individual word matches (fuzzy)
+      words.forEach(w => {
+        if (w.length < 2) return;
+        if (n.includes(w)) score += 15;
+        if (cat.includes(w)) score += 5;
+      });
+      return score;
+    }
+
+    function handleSearch(val) {
+      const q = val.trim();
+      const box = document.getElementById('searchResults');
+      if (q.length < 2) { box.classList.remove('visible'); box.innerHTML = ''; return; }
+
+      const nq = norm(q);
+      const words = nq.split(/\s+/).filter(w => w.length >= 2);
+
+      if (typeof KAKOBUY_DB === 'undefined') return;
+
+      // Score and filter products
+      const results = KAKOBUY_DB
+        .map((item, idx) => ({ item, idx, score: scoreProduct(item, nq, words) }))
+        .filter(r => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 12);
+
+      if (!results.length) {
+        box.innerHTML = `<div class="search-result-item"><div class="sri-text"><div class="sri-name" style="color:var(--text3)">Brak wyników dla &ldquo;${q}&rdquo;</div><div class="sri-sub">Spróbuj innej nazwy lub marki</div></div></div>`;
+      } else {
+        const header = `<div class="search-section-header">📦 PRODUKTY</div>`;
+        const items = results.map(({ item, idx }) => {
+          const thumb = item.image
+            ? `<img src="${item.image}" alt="${item.name}">`
+            : `<div class="sri-thumb-emoji">${CAT_ICONS[item.category] || '🛍️'}</div>`;
+          const price = item.pricePLN ? `<span class="sri-price">${item.pricePLN} zł</span>` : '';
+          const catLabel = CAT_NAMES[item.category] || item.category;
+          return `
+          <div class="search-result-item" onclick="openProduct(${idx}, '${item.category}'); clearSearch();">
+            <div class="sri-thumb">${thumb}</div>
+            <div class="sri-text">
+              <div class="sri-name">${item.name}</div>
+              <div class="sri-sub">${price}<span class="sri-cat">${catLabel}</span></div>
+            </div>
+            <div class="sri-arrow">→</div>
+          </div>`;
+        }).join('');
+        const footer = results.length === 12
+          ? `<div class="search-result-count">⚡ Wyświetlono 12 / więcej – Wpisz dokładniejszą frazę</div>` : '';
+        box.innerHTML = header + items + footer;
+      }
+      box.classList.add('visible');
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q || typeof KAKOBUY_DB === 'undefined') return;
+      const nq = norm(q);
+      const words = nq.split(/\s+/).filter(w => w.length >= 2);
+      const best = KAKOBUY_DB
+        .map((item, idx) => ({ idx, score: scoreProduct(item, nq, words) }))
+        .filter(r => r.score > 0)
+        .sort((a, b) => b.score - a.score)[0];
+      if (best) { openProduct(best.idx, KAKOBUY_DB[best.idx].category); clearSearch(); }
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      const box = document.getElementById('searchResults');
+      box.classList.remove('visible');
+      box.innerHTML = '';
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-wrap')) clearSearch();
+    });
+
+    /* TOAST */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    /* COPY */
+    function copyCode(code) {
+      navigator.clipboard.writeText(code).catch(() => { });
+      showToast('✓ Skopiowano: ' + code);
+    }
+
+    /* KALKULATOR */
+    const RATES = {
+      base: { pl: 8, de: 24, uk: 38, us: 58, cn: 48 },
+      type: { std: 1, exp: 1.8, eco: 0.7, pal: 3.5 }
+    };
+    const PROMOS = { WELCOME20: 0.8, BULK15: 0.85, BF30: 0.7, REF10: 0.9, NEWS5: 0.95 };
+
+    function calculate() {
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const weight = parseFloat(document.getElementById('weight').value) || 1;
+      const type = document.getElementById('type').value;
+      const insurance = parseInt(document.getElementById('insurance').value) || 0;
+      const cod = parseInt(document.getElementById('cod').value) || 0;
+      const promoCode = document.getElementById('promoInput').value.trim().toUpperCase();
+
+      const dest = to === 'pl' ? from : to;
+      const base = RATES.base[dest] * RATES.type[type];
+      const weightCost = weight * 2.5 * RATES.type[type];
+      const subtotal = base + weightCost + insurance + cod;
+
+      let discount = 1, promoLabel = '';
+      if (promoCode && PROMOS[promoCode]) { discount = PROMOS[promoCode]; promoLabel = ' (kod: ' + promoCode + ')'; }
+      else if (promoCode) { promoLabel = ' (nieprawidłowy kod)'; }
+
+      const total = (subtotal * discount).toFixed(2);
+      const savings = promoCode && PROMOS[promoCode] ? (subtotal * (1 - discount)).toFixed(2) : 0;
+
+      document.getElementById('resultPrice').textContent = total + ' zł';
+      const typeNames = { std: 'Standardowa', exp: 'Ekspresowa', eco: 'Ekonomiczna', pal: 'Paleta' };
+      let bd = `<div class="result-line">Baza: <strong>${base.toFixed(2)} zł</strong></div>
+      <div class="result-line">Waga ${weight}kg: <strong>${weightCost.toFixed(2)} zł</strong></div>
+      <div class="result-line">Typ: <strong>${typeNames[type]}</strong></div>`;
+      if (insurance) bd += `<div class="result-line">Ubezpieczenie: <strong>+${insurance} zł</strong></div>`;
+      if (cod) bd += `<div class="result-line">Pobranie: <strong>+${cod} zł</strong></div>`;
+      if (savings > 0) bd += `<div class="result-line" style="color:var(--accent)">Oszczędzasz: <strong>-${savings} zł${promoLabel}</strong></div>`;
+      else if (promoLabel) bd += `<div class="result-line" style="color:var(--red)">${promoLabel}</div>`;
+      document.getElementById('resultBreakdown').innerHTML = bd;
+    }
+
+    /* ================================================================
+       ITEM FINDER — AI-powered link → product card
+       ================================================================ */
+
+    // Input focus style
+    const ifInput = document.getElementById('if-url-input');
+    if (ifInput) {
+      ifInput.addEventListener('focus', () => document.getElementById('if-input-box').classList.add('if-focus'));
+      ifInput.addEventListener('blur',  () => document.getElementById('if-input-box').classList.remove('if-focus'));
+    }
+
+    let IF_SAVED = []; // session storage
+
+    // ─── Detect source from URL ───────────────────────────────────
+    function ifDetectSource(url) {
+      if (/taobao\.com|tmall\.com/.test(url)) return { src: 'Taobao', type: 'taobao' };
+      if (/weidian\.com/.test(url))           return { src: 'Weidian', type: 'weidian' };
+      if (/1688\.com/.test(url))              return { src: '1688', type: '1688' };
+      if (/kakobuy\.com/.test(url))           return { src: 'Kakobuy', type: 'kakobuy' };
+      if (/pandabuy\.com|pandabuy\.page\.link/.test(url)) return { src: 'Pandabuy', type: 'agent' };
+      if (/cnfans\.com/.test(url))            return { src: 'CNFans', type: 'agent' };
+      if (/superbuy\.com/.test(url))          return { src: 'Superbuy', type: 'agent' };
+      if (/sugargoo\.com/.test(url))          return { src: 'Sugargoo', type: 'agent' };
+      if (/cssbuy\.com/.test(url))            return { src: 'CSSBuy', type: 'agent' };
+      if (/mulebuy\.com/.test(url))           return { src: 'MuleBuy', type: 'agent' };
+      if (/acbuy\.com/.test(url))             return { src: 'ACBuy', type: 'agent' };
+      if (/oopbuy\.com/.test(url))            return { src: 'OopBuy', type: 'agent' };
+      if (/cnfans|hoobuy|lovegobuy|hipobuy|kameymall|basetao/.test(url)) return { src: 'Agent', type: 'agent' };
+      if (/ikako\.vip|sl\.kakobuy\.com/.test(url)) return { src: 'Kakobuy (short)', type: 'kakobuy' };
+      if (/m\.tb\.cn/.test(url))              return { src: 'Taobao (mobile)', type: 'taobao' };
+      return null;
+    }
+
+    function ifUpdateDetect(val) {
+      const lbl = document.getElementById('if-detect-label');
+      if (!val.trim()) { lbl.textContent = ''; return; }
+      const det = ifDetectSource(val);
+      if (det) {
+        const rawUrl = ifExtractRaw(val);
+        const kakobuyLink = ifBuildKakobuyLink(rawUrl);
+        lbl.innerHTML = `✓ Wykryto: <span style="color:var(--accent);font-weight:700;">${det.src}</span>
+          <br><span style="font-size:10px;color:var(--text3);letter-spacing:0;">🔗 Kakobuy + reflink: </span>
+          <a href="${kakobuyLink}" target="_blank"
+            style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);word-break:break-all;text-decoration:none;"
+            title="Otwórz na Kakobuy">${kakobuyLink}</a>
+          <button onclick="navigator.clipboard.writeText('${kakobuyLink.replace(/'/g, "\\'")}')
+            .then(()=>showToast('✓ Skopiowano link!')).catch(()=>{})"
+            style="margin-left:8px;background:rgba(200,245,66,0.12);border:1px solid rgba(200,245,66,0.3);
+                   color:var(--accent);font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;
+                   border-radius:4px;cursor:pointer;letter-spacing:1px;">KOPIUJ</button>`;
+      } else {
+        lbl.innerHTML = `<span style="color:var(--orange);">Nieznane źródło — mimo to spróbuj</span>`;
+      }
+    }
+
+    // ─── Extract raw marketplace URL from agent wrapper ────────────
+    function ifExtractRaw(url) {
+      const params = ['url', 'link', 'productLink', 'target', 'itemUrl'];
+      let u;
+      try { u = new URL(url); } catch(e) { return url; }
+      for (const p of params) {
+        const v = u.searchParams.get(p);
+        if (v) try { return decodeURIComponent(v); } catch(e) { return v; }
+      }
+      return url;
+    }
+
+    // ─── Extract item ID ───────────────────────────────────────────
+    function ifExtractItemId(url) {
+      let m = url.match(/[?&]id=(\d+)/);
+      if (m) return { id: m[1], platform: 'taobao' };
+      m = url.match(/itemId=(\d+)/);
+      if (m) return { id: m[1], platform: 'weidian' };
+      m = url.match(/offer\/(\d+)\.html/);
+      if (m) return { id: m[1], platform: '1688' };
+      return null;
+    }
+
+    // ─── Build kakobuy link (zawsze z reflinklem kdreps) ─────────────
+    const KDREPS_AFFCODE = 'kdreps';
+    function ifBuildKakobuyLink(rawUrl) {
+      if (/kakobuy\.com\/item\/details/.test(rawUrl)) {
+        // Już link kakobuy — tylko upewnij się że jest affcode
+        try {
+          const u = new URL(rawUrl);
+          if (!u.searchParams.get('affcode')) u.searchParams.set('affcode', KDREPS_AFFCODE);
+          return u.toString();
+        } catch(e) { return rawUrl; }
+      }
+      return 'https://www.kakobuy.com/item/details?url=' + encodeURIComponent(rawUrl) + '&affcode=' + KDREPS_AFFCODE;
+    }
+
+    // ─── Main fetch handler ────────────────────────────────────────
+    async function ifFetch() {
+      const raw = document.getElementById('if-url-input').value.trim();
+      if (!raw) { showToast('⚠ Wklej link!'); return; }
+
+      const realUrl = ifExtractRaw(raw);
+      const itemInfo = ifExtractItemId(realUrl);
+      const kakobuyLink = ifBuildKakobuyLink(realUrl);
+
+      document.getElementById('if-loading').style.display = 'block';
+      document.getElementById('if-result').style.display = 'none';
+      document.getElementById('if-fetch-btn').disabled = true;
+      document.getElementById('if-fetch-btn').style.opacity = '0.6';
+
+      const msgs = [
+        'OTWIERANIE KAKOBUY...',
+        'ŁADOWANIE STRONY PRODUKTU...',
+        'POBIERANIE NAZWY I CENY...',
+        'WYDOBYWANIE ZDJĘCIA...',
+        'FINALIZACJA DANYCH...'
+      ];
+      let mi = 0;
+      const msgInterval = setInterval(() => {
+        document.getElementById('if-loading-msg').textContent = msgs[mi++ % msgs.length];
+      }, 900);
+
+      try {
+        // 1. Check local DB first
+        let productData = null;
+        if (typeof KAKOBUY_DB !== 'undefined') {
+          const cleanUrl = realUrl.split('?')[0];
+          const found = KAKOBUY_DB.find(it => it.link && it.link.includes(cleanUrl) || (it.link && it.link.includes(itemInfo?.id)));
+          if (found) {
+            productData = {
+              name: found.name,
+              category: found.category,
+              pricePLN: found.pricePLN,
+              priceCNY: found.priceCNY,
+              quality: found.quality,
+              image: found.image,
+              confidence: 'high'
+            };
+          }
+        }
+
+        // 2. If not found, try to fetch metadata
+        if (!productData) {
+          productData = await ifScrapeMetadata(realUrl, itemInfo);
+        }
+
+        clearInterval(msgInterval);
+        ifRenderResult(productData, kakobuyLink, itemInfo);
+      } catch(err) {
+        console.error(err);
+        clearInterval(msgInterval);
+        ifRenderError(kakobuyLink, realUrl);
+      }
+
+      document.getElementById('if-loading').style.display = 'none';
+      document.getElementById('if-fetch-btn').disabled = false;
+      document.getElementById('if-fetch-btn').style.opacity = '1';
+    }
+
+    // ─── Check if Scraper API is running (Vercel or Local) ──────────
+    async function checkApiStatus() {
+      const badge = document.getElementById('api-status-badge');
+      const dot = document.getElementById('api-status-dot');
+      const text = document.getElementById('api-status-text');
+      if (!badge) return;
+
+      // Priority 1: Vercel / Remote API
+      // Priority 2: Local Scraper Engine (localhost:5000)
+      const healthEndpoints = ['/api/status', 'http://localhost:5000/status'];
+      
+      for (const url of healthEndpoints) {
+        try {
+          const res = await fetch(url, { signal: AbortSignal.timeout(2000) });
+          if (res.ok) {
+            badge.style.background = 'rgba(200,245,66,0.1)';
+            badge.style.color = 'var(--accent)';
+            badge.style.borderColor = 'rgba(200,245,66,0.3)';
+            dot.style.background = 'var(--accent)';
+            dot.style.animation = 'pulse 2s infinite';
+            text.textContent = url.startsWith('/') ? 'SCRAPER API: CLOUD ONLINE ✓' : 'SCRAPER API: LOCAL ONLINE ✓';
+            return;
+          }
+        } catch(e) {}
+      }
+
+      badge.style.background = 'rgba(255,68,68,0.1)';
+      badge.style.color = 'var(--red)';
+      badge.style.borderColor = 'rgba(255,68,68,0.3)';
+      dot.style.background = 'var(--red)';
+      dot.style.animation = 'none';
+      text.textContent = 'SCRAPER API: OFFLINE';
+    }
+
+    // ─── Metadata Scraper (Vercel primary, Local fallback) ──────────
+    async function ifScrapeMetadata(url, itemInfo) {
+      const platform = itemInfo ? itemInfo.platform : 'unknown';
+      let product = {
+        name: platform.toUpperCase() + ' ITEM',
+        category: 'buty',
+        priceCNY: '',
+        image: '',
+        quality: 'TOP',
+        confidence: 'low'
+      };
+
+      // Try Vercel Serverless / Remote API first (Automatic)
+      // Then fallback to Local Playwright Engine (Manual/Highest Quality)
+      const scraperEndpoints = ['/api/scrape', 'http://localhost:5000/scrape'];
+      
+      for (const apiBase of scraperEndpoints) {
+        try {
+          console.log(`Trying scraper at ${apiBase}...`);
+          const apiUrl = `${apiBase}?url=${encodeURIComponent(url)}`;
+          const res = await fetch(apiUrl, { signal: AbortSignal.timeout(30000) });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'success' || data.name) {
+              console.log('✓ SCRAPER SUCCESS:', data);
+              product.name = data.name || product.name;
+              product.priceCNY = data.priceCNY ? String(data.priceCNY) : '';
+              product.image = data.image || '';
+              product.confidence = data.source === 'vercel_api' ? 'medium' : 'high';
+              return product;
+            }
+          }
+        } catch(e) {
+          console.log(`Scraper at ${apiBase} unavailable: ${e.message}`);
+        }
+      }
+
+      // Final Informational Card
+      console.warn('All Scraper APIs offline.');
+      product.name = 'Błąd pobierania / Scraper Offline';
+      product.confidence = 'low';
+      return product;
+    }
+
+    // ─── Render result card ────────────────────────────────────────
+    function ifRenderResult(product, kakobuyLink, itemInfo) {
+      const catNames = {
+        'buty': 'OBUWIE', 'koszulki-bluzy': 'ODZIEŻ', 'koszulki-pilkarskie': 'SPORT',
+        'spodenki': 'ODZIEŻ', 'spodnie': 'ODZIEŻ', 'sety': 'ODZIEŻ',
+        'skarpetki': 'AKCESORIA', 'majtki': 'BIELIZNA', 'paski': 'AKCESORIA',
+        'portfele': 'AKCESORIA', 'plecaki': 'AKCESORIA', 'czapki': 'AKCESORIA',
+        'kurtki': 'ODZIEŻ', 'perfumy': 'KOSMETYKI'
+      };
+      const catIcons = {
+        'buty':'👟','koszulki-bluzy':'👕','koszulki-pilkarskie':'⚽','spodenki':'🩳',
+        'spodnie':'👖','sety':'👔','skarpetki':'🧦','majtki':'🩲','paski':'🥋',
+        'portfele':'👛','plecaki':'🎒','czapki':'🧢','kurtki':'🧥','perfumy':'💧'
+      };
+
+      const cat = product.category || 'buty';
+      const icon = catIcons[cat] || '🛍️';
+      const catLabel = catNames[cat] || cat.toUpperCase();
+
+      let imgHtml = '';
+      if (product.image) {
+        imgHtml = `<img id="if-prod-img" src="${product.image}" alt="${product.name}"
+          style="width:100%;height:100%;object-fit:contain;padding:24px;"
+          onerror="this.outerHTML='<div class=\\'pd-img-placeholder\\'>${icon}</div>'">`;
+      } else if (itemInfo && itemInfo.platform === 'taobao' && itemInfo.id) {
+        const proxyImg = `https://img.alicdn.com/bao/uploaded/i1/TB1${itemInfo.id}_!!0-item_pic.jpg_400x400.jpg`;
+        imgHtml = `<img id="if-prod-img" src="${proxyImg}" alt="${product.name}"
+          style="width:100%;height:100%;object-fit:contain;padding:24px;"
+          onerror="this.outerHTML='<div class=\\'pd-img-placeholder\\'>${icon}</div>'">`;
+      } else {
+        imgHtml = `<div class="pd-img-placeholder">${icon}</div>`;
+      }
+
+      const confColor = { high: 'var(--accent)', medium: 'var(--orange)', low: 'var(--text3)' };
+      const confLabel = { high: '✓ Wysoka pewność', medium: '~ Średnia pewność', low: '? Niska — zweryfikuj' };
+      const conf = product.confidence || 'medium';
+
+      const resultContainer = document.getElementById('if-result-content');
+      
+      const priceVal = product.priceCNY ? (parseFloat(product.priceCNY) * 0.546).toFixed(2) : '—';
+
+      resultContainer.innerHTML = `
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;animation:fadeUp 0.3s ease;">
+          <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:10px;height:10px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;"></div>
+              <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;">WYNIK WYSZUKIWANIA</span>
+              <span style="font-family:'DM Mono',monospace;font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(200,245,66,0.08);color:${confColor[conf]};border:1px solid ${confColor[conf]}33;">${confLabel[conf]}</span>
+            </div>
+            <button onclick="ifNewSearch()" style="background:none;border:1px solid var(--border2);color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">↩ NOWE SZUKANIE</button>
+          </div>
+
+          <div class="pd-grid" style="padding:36px;">
+            <div class="pd-img-side">
+              <div class="pd-img-frame" style="background:#fff;">${imgHtml}</div>
+              <div style="margin-top:12px;text-align:center;">
+                <a href="${kakobuyLink}" target="_blank" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);word-break:break-all;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">🔗 ${kakobuyLink.substring(0, 55)}...</a>
+              </div>
+            </div>
+
+            <div class="pd-info-side">
+              <div class="pd-cat-label">${catLabel}</div>
+              <h1 class="pd-name">${product.name || 'PRODUKT'}</h1>
+              <div class="pd-divider"></div>
+
+              <div class="pd-prices-row" style="margin-bottom:24px;">
+                <div class="pd-price-pln">${priceVal !== '—' ? priceVal + ' zł' : '— zł'}</div>
+                <div class="pd-price-cny">${product.priceCNY ? '¥ ' + product.priceCNY : ''}</div>
+              </div>
+
+              <div class="pd-badges">
+                <div class="pd-badge">JAKOŚĆ: <span>${product.quality || 'TOP'}</span></div>
+                ${product.brand ? `<div class="pd-badge">MARKA: <span>${product.brand.toUpperCase()}</span></div>` : ''}
+                <div class="pd-badge">ID: <span>${itemInfo ? itemInfo.id : '—'}</span></div>
+              </div>
+
+              ${product.description ? `<div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);line-height:1.7;padding:16px;background:var(--bg2);border-radius:10px;border:1px solid var(--border);">${product.description}</div>` : ''}
+
+              <div class="pd-divider"></div>
+
+              <a href="${kakobuyLink}" target="_blank" class="pd-buy-btn">🛒 OTWÓRZ NA KAKOBUY</a>
+
+              <button onclick="ifSaveItem(${JSON.stringify(product).replace(/"/g, '&quot;')}, '${kakobuyLink.replace(/'/g, "\\'")}', '${priceVal}')"
+                style="width:100%;padding:14px 32px;background:rgba(200,245,66,0.1);color:var(--accent);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(200,245,66,0.3);border-radius:14px;cursor:pointer;transition:all 0.2s;"
+                onmouseover="this.style.background='rgba(200,245,66,0.18)'" onmouseout="this.style.background='rgba(200,245,66,0.1)'">
+                ＋ ZAPISZ DO BAZY
+              </button>
+
+              <p class="pd-note">Dane pobrane automatycznie · Wszystkie prawa zastrzeżone</p>
+            </div>
+          </div>
+        </div>`;
+
+      goTo('item-result');
+    }
+
+    // ─── Render error fallback ─────────────────────────────────────
+    function ifRenderError(kakobuyLink, rawUrl) {
+      const resultContainer = document.getElementById('if-result-content');
+      
+      resultContainer.innerHTML = `
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;animation:fadeUp 0.3s ease;">
+          <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:8px;">NIE UDAŁO SIĘ POBRAĆ DANYCH</div>
+          <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);margin-bottom:24px;">Sprawdź link ręcznie na Kakobuy</div>
+          <a href="${kakobuyLink}" target="_blank" class="pd-buy-btn" style="display:inline-flex;max-width:360px;">🛒 OTWÓRZ NA KAKOBUY</a>
+          <div style="margin-top:12px;">
+            <button onclick="ifNewSearch()" style="background:none;border:1px solid var(--border2);color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;border-radius:8px;cursor:pointer;">↩ SPRÓBUJ PONOWNIE</button>
+          </div>
+        </div>`;
+      
+      goTo('item-result');
+    }
+
+    // ─── New search ────────────────────────────────────────────────
+    function ifNewSearch() {
+      document.getElementById('if-url-input').value = '';
+      document.getElementById('if-detect-label').textContent = '';
+      goTo('item-finder');
+      document.getElementById('if-url-input').focus();
+    }
+
+    // ─── Save item ─────────────────────────────────────────────────
+    function ifSaveItem(product, kakobuyLink, fixedPln) {
+      const pln = fixedPln || '';
+      const imgEl = document.getElementById('if-prod-img');
+      const imgSrc = imgEl && imgEl.complete && imgEl.naturalWidth > 0 ? imgEl.src : '';
+
+      const item = {
+        category: product.category || 'buty',
+        name: product.name || 'PRODUKT',
+        pricePLN: pln,
+        priceCNY: product.priceCNY || '',
+        quality: product.quality || 'TOP',
+        link: kakobuyLink,
+        image: imgSrc
+      };
+
+      IF_SAVED.push(item);
+      ifRenderSaved();
+      showToast('✓ Zapisano: ' + item.name);
+    }
+
+    // ─── Render saved grid ─────────────────────────────────────────
+    function ifRenderSaved() {
+      const section = document.getElementById('if-saved-section');
+      const grid = document.getElementById('if-saved-grid');
+      const count = document.getElementById('if-saved-count');
+
+      if (IF_SAVED.length === 0) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      count.textContent = IF_SAVED.length;
+
+      const catIcons = {
+        'buty':'👟','koszulki-bluzy':'👕','koszulki-pilkarskie':'⚽','spodenki':'🩳',
+        'spodnie':'👖','sety':'👔','skarpetki':'🧦','majtki':'🩲','paski':'🥋',
+        'portfele':'👛','plecaki':'🎒','czapki':'🧢','kurtki':'🧥','perfumy':'💧'
+      };
+
+      grid.innerHTML = IF_SAVED.map((item, idx) => {
+        const icon = catIcons[item.category] || '🛍️';
+        const imgHtml = item.image
+          ? `<img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;padding:16px;" onerror="this.outerHTML='<div class=\\'no-img-placeholder\\'>${icon}</div>'">`
+          : `<div class="no-img-placeholder">${icon}</div>`;
+        return `
+          <div class="product-card">
+            <button onclick="IF_SAVED.splice(${idx},1);ifRenderSaved();" title="Usuń"
+              style="position:absolute;top:10px;left:10px;z-index:3;background:rgba(255,68,68,0.85);border:none;color:#fff;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+            <div class="product-img-wrap">${imgHtml}</div>
+            <div class="product-card-arrow">→</div>
+            <div class="product-info">
+              <div class="product-title">${item.name}</div>
+              <div class="product-price">
+                <span class="pln">${item.pricePLN ? item.pricePLN + ' zł' : '—'}</span>
+                <span class="cny">${item.priceCNY ? '¥' + item.priceCNY : ''}</span>
+              </div>
+              <div class="product-tags">
+                ${item.quality ? `<span class="tag-batch">${item.quality}</span>` : ''}
+              </div>
+            </div>
+            ${item.link && item.link !== '#' ? `<a href="${item.link}" target="_blank" style="display:block;margin:0 16px 16px;padding:10px;text-align:center;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1px;border-radius:8px;text-decoration:none;transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">🛒 KAKOBUY</a>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    // ─── Clear saved ───────────────────────────────────────────────
+    function ifClearSaved() {
+      if (!confirm('Usunąć wszystkie zapisane itemy?')) return;
+      IF_SAVED = [];
+      ifRenderSaved();
+    }
+
+    // ─── Export ────────────────────────────────────────────────────
+    function ifExportJS() {
+      if (IF_SAVED.length === 0) { showToast('⚠ Brak zapisanych itemów!'); return; }
+      const lines = IF_SAVED.map(i => '  ' + JSON.stringify(i)).join(',\n');
+      document.getElementById('if-export-text').value =
+        `// Wklej poniższe wpisy na końcu tablicy w baza.js (przed ostatnim ];\n// Dodaj przecinek po ostatnim istniejącym wpisie!\n${lines},`;
+      document.getElementById('if-export-modal').style.display = 'flex';
+    }
+
+    function ifCopyExport() {
+      navigator.clipboard.writeText(document.getElementById('if-export-text').value).catch(() => {});
+      showToast('✓ Skopiowano!');
+    }
+  </script>
+</body>
+
+</html>

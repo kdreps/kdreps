@@ -1,0 +1,23 @@
+import openpyxl
+import sys
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+wb = openpyxl.load_workbook("KDREPS-SPREADSHEET-Kopia-arkusza-SPREEDSHEET.xlsx", data_only=False)
+ws = wb.active
+
+print("--- Data Row 20 to 25 All Columns ---")
+for row in list(ws.iter_rows(min_row=20, max_row=25)):
+    row_vals = []
+    for cell in row:
+        val = cell.value
+        if cell.hyperlink:
+            val = f"🔗[{cell.hyperlink.target}]"
+        elif val and str(val).startswith('='):
+            val = f"📝[{val}]"
+        elif val is None:
+            val = ""
+        row_vals.append(str(val))
+        
+    print(" | ".join(row_vals[:20]))
+

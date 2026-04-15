@@ -1,0 +1,42 @@
+import time
+from playwright.sync_api import sync_playwright
+
+def main():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        
+        errors = []
+        page.on("console", lambda msg: errors.append(f"[{msg.type}] {msg.text}"))
+        page.on("pageerror", lambda err: errors.append(f"[UNCAUGHT] {err}"))
+        
+        url = "file:///c:/Users/igor/Downloads/kdreps/kdreps.html"
+        print(f"Loading {url} ...")
+        
+        try:
+            page.goto(url)
+            time.sleep(2)  # wait for JS to run
+        except Exception as e:
+            print(f"Failed to load: {e}")
+        
+        print("--- Console Logs ---")
+        for e in errors:
+            print(e)
+            
+        # specifically check if KAKOBUY_DB is defined
+        try:
+            is_defined = page.evaluate("typeof KAKOBUY_DB !== 'undefined'")
+            print(f"KAKOBUY_DB defined: {is_defined}")
+            if is_defined:
+                count = page.evaluate("KAKOBUY_DB.length")
+                print(f"KAKOBUY_DB length: {count}")
+                # check if anything was rendered
+                rendered_count = page.evaluate("document.querySelectorAll('.product-card').length")
+                print(f"Rendered product cards: {rendered_count}")
+        except Exception as e:
+            print("Could not check KAKOBUY_DB:", e)
+            
+        browser.close()
+
+if __name__ == "__main__":
+    main()

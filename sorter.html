@@ -1,0 +1,129 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from playwright.sync_api import sync_playwright
+import time
+import re
+
+import requests
+
+app = Flask(__name__)
+CORS(app)  # Allow KDREPS HTML to talk to this API
+
+import urllib.parse
+
+def scrape_kakobuy_direct(raw_url):
+    """
+    Translates any link to a Kakobuy link and uses Playwright to open kakobuy.com directly.
+    Since kakobuy handles all external links (weidian/taobao/1688), we just pass it to kakobuy
+    and scrape the translated, standardized product info (ideal data).
+    """
+    kakobuy_url = "https://www.kakobuy.com/item/details?url=" + urllib.parse.quote(raw_url)
+    print(f"Scraping Kakobuy directly: {kakobuy_url}")
+    
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+        )
+        page = context.new_page()
+        
+        try:
+            page.goto(kakobuy_url, wait_until="networkidle", timeout=45000)
+            
+            # Wait for either title element or an error element
+            try:
+                page.wait_for_selector('.item-title, .goods-title', timeout=15000)
+            except:
+                print("Timeout waiting for Kakobuy UI elements, maybe Captcha or slow page. Attempting blind extraction...")
+                time.sleep(3) # Wait just a bit longer
+                
+            content = page.content()
+            
+            data = {
+                "name": "Nieznany Produkt",
+                "priceCNY": "",
+                "image": "",
+                "status": "success",
+                "source": "kakobuy_playwright_scraper"
+            }
+            
+            # Extract Name
+            # Based on dump: <span data-v-d02175c2="" class="item-title">sese 2
+            title_el = page.query_selector('.item-title, .goods-title, .product-title')
+            if title_el:
+                data["name"] = title_el.inner_text().strip()
+                
+            # Extract Price
+            # Usually prices class, looking for text with ￥ or ¥
+            price_el = page.query_selector('.price, .goods-price, .item-price')
+            if price_el:
+                text = price_el.inner_text()
+                match = re.search(r"(\d+(\.\d+)?)", text)
+                if match:
+                    data["priceCNY"] = match.group(1)
+                    
+            if not data["priceCNY"]:
+                 # regex via content
+                 prices = re.findall(r'<[^>]*class="[^"]*price[^"]*"[^>]*>(.*?)</', content)
+                 for p in prices:
+                     match = re.search(r"(\d+(\.\d+)?)", str(p))
+                     if match:
+                         data["priceCNY"] = match.group(1)
+                         break
+
+            # Extract Image — prefer product image from geilicdn/alicdn, not banners
+            # Try specific Kakobuy product image selectors first
+            img_selectors = [
+                '.item-img img', '.goods-pic img', '.product-photo img',
+                '.swiper-slide img', '.item-main-img img', '.main-pic img'
+            ]
+            for sel in img_selectors:
+                img_el = page.query_selector(sel)
+                if img_el:
+                    src = img_el.get_attribute("src") or img_el.get_attribute("data-src")
+                    if src and 'banner' not in src.lower() and 'logo' not in src.lower():
+                        data["image"] = src if src.startswith("http") else "https:" + src
+                        break
+            
+            # Fallback Image: grab all imgs and prefer geilicdn/alicdn product CDNs
+            if not data["image"]:
+                all_imgs = page.query_selector_all("img")
+                for img_el in all_imgs:
+                    src = img_el.get_attribute("src") or img_el.get_attribute("data-src") or ""
+                    if not src: continue
+                    low = src.lower()
+                    if any(x in low for x in ["logo", "icon", "avatar", "badge", "banner", "nstatic"]): continue
+                    if "geilicdn.com" in low or "alicdn.com" in low:
+                        data["image"] = src if src.startswith("http") else "https:" + src
+                        break
+
+            print(f"Scraped successful: {data['name']} / {data['priceCNY']} / img: {bool(data['image'])}")
+            
+            # Strip thumbnail resize params to get full-resolution image
+            if data["image"] and ("?w=" in data["image"] or "?h=" in data["image"]):
+                data["image"] = data["image"].split("?")[0]
+            return data
+            
+        except Exception as e:
+            print(f"Error during Kakobuy direct scrape: {e}")
+            return {"status": "error", "message": str(e)}
+        finally:
+            browser.close()
+
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({"status": "online", "engine": "kakobuy_playwright"})
+
+@app.route('/scrape', methods=['GET'])
+def scrape():
+    target_url = request.args.get('url')
+    if not target_url:
+        return jsonify({"error": "Missing url parameter"}), 400
+    
+    result = scrape_kakobuy_direct(target_url)
+    return jsonify(result)
+
+if __name__ == '__main__':
+    print("KDREPS Scraper API Engine starting on http://localhost:5000")
+    print("Keep this window open for the Item Finder to work perfectly.")
+    app.run(port=5000, debug=False)

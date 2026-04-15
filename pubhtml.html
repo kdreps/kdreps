@@ -1,0 +1,7 @@
+import re
+with open('kakobuy_dump.html', encoding='utf-8') as f:
+    html = f.read()
+    prices = re.findall(r'<[^>]*class="[^"]*price[^"]*"[^>]*>(.*?)</', html)
+    print('Prices elements:', prices[:10])
+    imgs = re.findall(r'<img[^>]*src="([^"]+)"[^>]*>', html)
+    print('Images:', imgs[:5])

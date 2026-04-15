@@ -1,0 +1,20 @@
+import requests, json, re, sys
+
+SHEET_ID = '1qiFevU2X5OvO-rtM5ZlBhM893abQwP0USRnYLFYTBcA'
+url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:json&tq=select+*'
+
+r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+text = r.text
+
+match = re.search(r'google\.visualization\.Query\.setResponse\((.*)\)', text, re.DOTALL)
+if not match:
+    sys.exit('No gviz match')
+
+data = json.loads(match.group(1))
+
+# Save FIRST before any printing
+with open('gviz_data.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False)
+
+rows = data.get('table', {}).get('rows', [])
+sys.stderr.write(f"Saved {len(rows)} rows to gviz_data.json\n")

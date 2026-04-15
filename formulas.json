@@ -1,0 +1,55 @@
+"""
+Parse gviz data, extract product name+link pairs, match to baza.js, update links.
+"""
+import json, re, difflib
+
+# Load gviz data
+with open('gviz_data.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+rows = data['table']['rows']
+
+def cell_val(row, idx):
+    c = row.get('c', [])
+    if idx < len(c) and c[idx]:
+        return c[idx].get('v') or c[idx].get('f') or ''
+    return ''
+
+def cell_link(row, idx):
+    c = row.get('c', [])
+    if idx < len(c) and c[idx]:
+        cell = c[idx]
+        # Check all possible link storage locations in gviz
+        for key in ['f', 'v', 'p']:
+            val = str(cell.get(key, '') or '')
+            if 'ikako.vip' in val or 'kakobuy.com' in val:
+                return val
+    return None
+
+# Dump first 5 data rows to understand structure
+result = {'rows': []}
+for i in range(20, 27):
+    row = rows[i]
+    cells = row.get('c', [])
+    rowdata = {}
+    for j, c in enumerate(cells):
+        if c and (c.get('v') is not None or c.get('f')):
+            rowdata[j] = {'v': c.get('v'), 'f': c.get('f'), 'p': c.get('p')}
+    result['rows'].append({'row_idx': i, 'cells': rowdata})
+
+with open('sample_rows.json', 'w', encoding='utf-8') as f:
+    json.dump(result, f, ensure_ascii=False, indent=2)
+
+# Check if any cell has ikako or hyperlink data in the 'p' property
+for i, row in enumerate(rows):
+    for j, c in enumerate(row.get('c', []) or []):
+        if c and c.get('p'):
+            p = c['p']
+            if isinstance(p, dict):
+                for key, val in p.items():
+                    if isinstance(val, str) and ('ikako' in val or 'kakobuy' in val):
+                        with open('found_in_p.json', 'w', encoding='utf-8') as f:
+                            json.dump({'row': i, 'col': j, 'p': p, 'v': c.get('v'), 'f': c.get('f')}, f, ensure_ascii=False, indent=2)
+                        break
+
+print("Done - check sample_rows.json and found_in_p.json")

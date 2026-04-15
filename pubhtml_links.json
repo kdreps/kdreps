@@ -1,0 +1,27 @@
+import json
+
+with open("weidian_debug.json", "r", encoding="utf-8") as f:
+    responses = json.load(f)
+
+unique_items = {}
+
+for response in responses:
+    if "result" in response and "itemList" in response["result"]:
+        items = response["result"]["itemList"]
+        for item in items:
+            item_id = item.get("itemId")
+            if item_id:
+                unique_items[str(item_id)] = item
+    # Sometimes it might be in data? Check just in case
+    elif "data" in response and isinstance(response["data"], dict) and "items" in response["data"]:
+        items = response["data"]["items"]
+        for item in items:
+            item_id = item.get("itemId")
+            if item_id:
+                unique_items[str(item_id)] = item
+
+final_items = list(unique_items.values())
+print(f"Extracted {len(final_items)} unique items.")
+
+with open("weidian_raw_data.json", "w", encoding="utf-8") as f:
+    json.dump(final_items, f, ensure_ascii=False, indent=2)
