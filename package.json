@@ -1,0 +1,1 @@
+{"name":"kdreps","version":"1.0.0","description":"K-dreps database","scripts":{"build":"mkdir -p dist && cp -r *.html *.js *.json *.csv assets dist/ 2>/dev/null || true"},"keywords":["kdreps","database"],"author":"kdreps","license":"MIT"}
